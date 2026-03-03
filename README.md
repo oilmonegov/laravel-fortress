@@ -96,23 +96,34 @@ Many checks can be automated. Static analysis (PHPStan), linting (Pint), depende
 
 The Laravel Fortress includes a complete **AI skill system** that teaches your coding assistant all 1,755 checks. The system is **version-agnostic** — it detects your project's PHP version, Laravel version, database, and packages at runtime and applies only the relevant rules.
 
+### Laravel Boost (MCP Server) — Strongly Recommended
+
+[Laravel Boost](https://github.com/laravel/boost) is a Model Context Protocol (MCP) server that gives your AI agent direct access to your running Laravel application — database schema, routes, config, logs, Artisan commands, and a Tinker REPL. This transforms fortress enforcement from static code analysis to **live application verification**.
+
+```bash
+composer require laravel/boost --dev
+```
+
+With Boost, your AI agent can verify fortress rules against your actual database schema, route list, config values, and application state — not just source code. See [`rules/README.md`](rules/README.md#laravel-boost-mcp-server--essential-for-laravel-projects) for the full tool-to-fortress mapping.
+
 ### Supported Editors
 
 | Editor | File | Recommended Workflow |
 |--------|------|---------------------|
-| **Claude Code** | 14 modular skills + `CLAUDE.md` | Use `feature-dev` plugin for architecture, implementation, and review with fortress skills active |
-| **Cursor** | `.cursorrules` | Inline review + Composer mode for multi-file fortress compliance |
-| **Windsurf** | `.windsurfrules` | Cascade flows apply rules automatically during multi-step generation |
-| **GitHub Copilot** | `.github/copilot-instructions.md` | Copilot Chat + PR review with fortress context |
+| **Claude Code** | 14 modular skills + `CLAUDE.md` | `feature-dev` plugin + Laravel Boost MCP for architecture, implementation, review, and live verification |
+| **Cursor** | `.cursorrules` | Inline review + Composer mode + Boost MCP for live verification |
+| **Windsurf** | `.windsurfrules` | Cascade flows + Boost MCP for multi-step generation with live checks |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Copilot Chat + PR review + Boost MCP for fortress context |
 
 See [`rules/README.md`](rules/README.md#recommended-tools--workflows) for detailed recommended tools, workflow patterns, and how to use the fortress for code review with each editor.
 
 ### How It Works
 
-1. The AI reads your `composer.json`, `package.json`, and `.env` to build a project profile
+1. The AI reads your `composer.json`, `package.json`, and `.env` to build a project profile (or uses Laravel Boost's `application-info` for the most accurate detection)
 2. It reads `.fortress.yml` (if present) to check which parts are enabled
 3. For each rule, it checks whether the rule applies to your detected stack
 4. Rules are enforced at the configured enforcement level (strict / standard / relaxed)
+5. With Laravel Boost, the agent can **verify rules against your live application** — querying schema, routes, config, and executing test code
 
 ### Configuration
 

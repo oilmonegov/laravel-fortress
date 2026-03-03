@@ -175,31 +175,77 @@ Each rule carries conditions that determine when it applies:
 
 The fortress defines *what* rules to enforce. These tools help your AI agent *how* to work with them effectively across the development lifecycle.
 
+### Laravel Boost (MCP Server) — Essential for Laravel Projects
+
+[Laravel Boost](https://github.com/laravel/boost) is a Model Context Protocol (MCP) server built specifically for Laravel applications. It gives your AI coding agent **direct access to your running application** — database schema, routes, config, logs, Artisan commands, and a Tinker REPL. This is critical for fortress enforcement because the agent can **verify rules against your actual application state**, not just static code.
+
+**Install**: `composer require laravel/boost --dev` then configure as an MCP server in your editor.
+
+| Boost Tool | Fortress Benefit |
+|------------|-----------------|
+| `database-schema` | Verify P09 (Database) rules: check indexes exist, foreign keys are correct, column types match expectations, soft deletes are present |
+| `database-query` | Run read-only queries to verify P05 (Financial) rules: check money columns are VARCHAR not DECIMAL, verify ledger integrity, spot orphaned records |
+| `list-routes` | Verify P01 (Security) and P03 (Auth) rules: confirm all routes have middleware, check for unprotected endpoints, validate rate limiting |
+| `tinker` | Test P04 (Concurrency) rules: verify state machine transitions, check model casts, confirm enum values, test validation rules |
+| `read-log-entries` | Check P13 (Logging) rules: verify audit trail entries, confirm sensitive data is not logged |
+| `last-error` | Debug violations found during fortress review — see the actual exception context |
+| `search-docs` | Look up version-specific Laravel documentation when applying P08 (Laravel) rules — ensures advice matches your exact Laravel version |
+| `application-info` | Auto-detect PHP version, Laravel version, database engine, and installed packages — feeds directly into fortress stack detection |
+| `get-config` | Verify P14 (Infrastructure) rules: check environment config, cache drivers, queue connections, session settings |
+| `browser-logs` | Verify P10 (Frontend) rules: check for JS errors, console warnings, CSP violations |
+
+**Why Boost is essential for fortress enforcement:**
+
+The fortress rules file tells the AI *what* to check. Boost gives the AI the ability to *actually check it* against your running application. Without Boost, the agent can only read source code. With Boost, it can:
+
+- Query your database schema to verify migration rules (P09)
+- Inspect your route list to verify auth middleware coverage (P01, P03)
+- Read your actual config values to verify environment rules (P14)
+- Execute PHP to test model casts, validation rules, and state machines (P04, P05, P08)
+- Search version-specific docs to give accurate version-adapted advice
+
+**Example: Fortress + Boost audit prompt:**
+
+```
+Run a fortress audit of Part I (Application Security) against this project:
+1. Use `list-routes` to find all routes without auth middleware
+2. Use `database-schema` to check for missing indexes on foreign keys
+3. Use `get-config` to verify session and cookie security settings
+4. Report findings with fortress rule IDs
+```
+
 ### Claude Code
 
 Claude Code has the richest integration via modular skills and specialized sub-agents:
 
 | Workflow | Tool / Plugin | How It Uses the Fortress |
 |----------|--------------|--------------------------|
+| **Stack detection** | Laravel Boost MCP (`application-info`) | Reads PHP version, Laravel version, database engine, and all installed packages directly from the running app — the most accurate source for fortress `applies_when` conditions. |
 | **Feature development** | `feature-dev` plugin (Anthropic) | Use `feature-dev:code-architect` to design features, then `feature-dev:code-reviewer` to verify the implementation against fortress rules. The architect reads relevant Part skills before proposing a design. |
 | **Code review** | `feature-dev:code-reviewer` | Point the reviewer at a diff or file set. It cross-references the fortress skills to flag violations by rule ID (e.g., `F-P01-003`). |
 | **Deep codebase analysis** | `feature-dev:code-explorer` | Traces execution paths and maps architecture. Combine with fortress skills to audit whether existing code meets standards. |
+| **Live verification** | Laravel Boost MCP tools | After identifying a potential violation in code, use `database-schema`, `tinker`, or `list-routes` to verify whether the issue exists in the running application. |
 | **Focused audit** | Fortress skills directly | Activate `fortress-security` when reviewing auth code, `fortress-financial` when reviewing money logic, etc. The agent applies only the relevant Part's rules. |
+| **Documentation lookup** | Laravel Boost `search-docs` | When a fortress rule references a Laravel feature, search version-specific docs to verify the correct API for the project's Laravel version. |
 | **Code simplification** | `laravel-simplifier` (if available) | After fortress review, simplify flagged code while preserving compliance. |
 
 **Skill activation pattern for Claude Code:**
 
 ```
 # In your project's CLAUDE.md, add a skill activation table:
-| Domain                    | Fortress Skill(s) to Activate         |
-|---------------------------|---------------------------------------|
-| Auth, roles, permissions  | fortress-auth, fortress-security      |
-| Money, ledger, trades     | fortress-financial, fortress-security |
-| API endpoints, webhooks   | fortress-apis, fortress-security      |
-| Database migrations       | fortress-database                     |
-| Vue/Inertia pages         | fortress-frontend                     |
-| Tests                     | fortress-testing                      |
-| Any new code              | fortress-clean-code, fortress-php     |
+| Domain                    | Fortress Skill(s) to Activate           |
+|---------------------------|-----------------------------------------|
+| Auth, roles, permissions  | fortress-auth, fortress-security        |
+| Money, ledger, trades     | fortress-financial, fortress-security   |
+| API endpoints, webhooks   | fortress-apis, fortress-security        |
+| Database migrations       | fortress-database                       |
+| Vue/Inertia pages         | fortress-frontend                       |
+| Tests                     | fortress-testing                        |
+| Any new code              | fortress-clean-code, fortress-php       |
+
+# Also ensure Laravel Boost MCP is configured — it provides:
+# database-schema, database-query, list-routes, tinker, search-docs,
+# application-info, get-config, read-log-entries, browser-logs, last-error
 ```
 
 ### Cursor
@@ -209,6 +255,7 @@ Claude Code has the richest integration via modular skills and specialized sub-a
 | **Inline review** | Cursor reads `.cursorrules` automatically. When you ask it to review code or implement a feature, it applies fortress rules in context. |
 | **Chat review** | Ask: *"Review this file against the fortress security rules"* — Cursor references the embedded rules. |
 | **Composer mode** | For multi-file changes, Cursor applies rules across all touched files. |
+| **MCP integration** | Configure Laravel Boost as an MCP server in Cursor for live schema/route/config verification during reviews. |
 
 ### Windsurf
 
@@ -217,6 +264,7 @@ Claude Code has the richest integration via modular skills and specialized sub-a
 | **Cascade flows** | Windsurf reads `.windsurfrules` and applies rules during its multi-step Cascade flows. |
 | **Code generation** | Rules constrain generated code to follow fortress standards. |
 | **Review commands** | Ask Windsurf to audit a file or directory against specific Parts. |
+| **MCP integration** | Configure Laravel Boost as an MCP server in Windsurf for live application introspection. |
 
 ### GitHub Copilot
 
@@ -225,6 +273,7 @@ Claude Code has the richest integration via modular skills and specialized sub-a
 | **Copilot Chat** | With `copilot-instructions.md` installed, Copilot Chat applies fortress rules when answering questions or generating code. |
 | **PR reviews** | Use Copilot's PR review feature — it will reference the fortress rules when evaluating changes. |
 | **Inline suggestions** | Copilot's completions are influenced by the rules, steering toward compliant patterns. |
+| **MCP integration** | GitHub Copilot supports MCP servers — configure Laravel Boost for live verification during chat sessions. |
 
 ### Using the Fortress for Code Review
 
