@@ -1,0 +1,48 @@
+#!/bin/bash
+# @fortress-hook v1.1.0 (stub)
+# post-receive — Server-side hook: runs after a push is fully accepted
+#
+# Purpose:
+#   Trigger post-push automation on the server. This is the standard
+#   hook for deployment triggers, notifications, and CI/CD integration.
+#
+#   Use cases:
+#   - Trigger deployment pipeline
+#   - Send Slack/Discord notifications
+#   - Update issue trackers
+#   - Clear caches
+#   - Run post-deploy health checks
+#
+# Arguments:
+#   stdin: lines of "old-sha new-sha refname"
+#
+# Note: This hook runs on the SERVER after the push is complete.
+#       It cannot reject the push (it's already accepted).
+#
+# To activate: Uncomment the implementation below and deploy to your server.
+
+# while read -r OLD_SHA NEW_SHA REFNAME; do
+#     BRANCH=$(echo "$REFNAME" | sed 's|refs/heads/||')
+#
+#     # Only deploy from specific branches
+#     case "$BRANCH" in
+#         main|master)
+#             echo "[Fortress] Triggering production deployment for $BRANCH..."
+#             # curl -X POST https://your-ci.example.com/deploy/production
+#             ;;
+#         staging)
+#             echo "[Fortress] Triggering staging deployment..."
+#             # curl -X POST https://your-ci.example.com/deploy/staging
+#             ;;
+#     esac
+#
+#     # Notify team
+#     AUTHOR=$(git log -1 --format="%an" "$NEW_SHA" 2>/dev/null || echo "unknown")
+#     SUBJECT=$(git log -1 --format="%s" "$NEW_SHA" 2>/dev/null || echo "")
+#     echo "[Fortress] Push by $AUTHOR to $BRANCH: $SUBJECT"
+#     # curl -X POST -H 'Content-type: application/json' \
+#     #   --data "{\"text\":\"$AUTHOR pushed to $BRANCH: $SUBJECT\"}" \
+#     #   https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+# done
+
+exit 0

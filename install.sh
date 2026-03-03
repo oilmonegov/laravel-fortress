@@ -9,15 +9,40 @@
 
 set -euo pipefail
 
-TARGET="${1:-.}"
-REPO_RAW="https://raw.githubusercontent.com/chuxolab/laravel-fortress/main"
+# --- Parse Arguments ---
+TARGET=""
+INSTALL_HOOKS=false
+INSTALL_CI=false
+SKIP_PROMPTS=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --hooks)      INSTALL_HOOKS=true; shift ;;
+        --ci)         INSTALL_CI=true; shift ;;
+        --all)        INSTALL_HOOKS=true; INSTALL_CI=true; SKIP_PROMPTS=true; shift ;;
+        --help|-h)
+            echo "Usage: install.sh [options] [target-directory]"
+            echo ""
+            echo "Options:"
+            echo "  --hooks    Install fortress git hooks"
+            echo "  --ci       Install GitHub Actions PR protection workflow"
+            echo "  --all      Install everything without prompting"
+            echo "  --help     Show this help message"
+            exit 0
+            ;;
+        *)            TARGET="$1"; shift ;;
+    esac
+done
+
+TARGET="${TARGET:-.}"
+REPO_RAW="https://raw.githubusercontent.com/oilmonegov/laravel-fortress/main"
 INSTALLED=()
 
 echo ""
-echo "  ╔══════════════════════════════════════╗"
-echo "  ║     The Laravel Fortress Installer   ║"
-echo "  ║   1,755 checks · 200 sections · v1  ║"
-echo "  ╚══════════════════════════════════════╝"
+echo "  ╔═══════════════════════════════════════╗"
+echo "  ║     The Laravel Fortress Installer    ║"
+echo "  ║  1,755 checks · 200 sections · v1.1  ║"
+echo "  ╚═══════════════════════════════════════╝"
 echo ""
 
 # Verify target is a Laravel project
@@ -139,6 +164,71 @@ if [ ${#INSTALLED[@]} -eq 0 ]; then
     exit 0
 fi
 
+# --- Git Hooks ---
+if [ "$INSTALL_HOOKS" = true ]; then
+    SHOULD_INSTALL_HOOKS=true
+elif [ "$SKIP_PROMPTS" = false ]; then
+    echo ""
+    read -p "  Install fortress git hooks? [Y/n] " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+        SHOULD_INSTALL_HOOKS=true
+    else
+        SHOULD_INSTALL_HOOKS=false
+    fi
+else
+    SHOULD_INSTALL_HOOKS=false
+fi
+
+if [ "$SHOULD_INSTALL_HOOKS" = true ] && [ -d "$TARGET/.git" ]; then
+    echo "  Installing git hooks..."
+    HOOKS_INSTALLER="$TARGET/.fortress-hook-installer.sh"
+    download "hooks/install-hooks.sh" "$HOOKS_INSTALLER"
+    chmod +x "$HOOKS_INSTALLER"
+
+    # Download hook files
+    mkdir -p "$TARGET/.git/hooks"
+    download "hooks/fortress-hook-lib.sh" "$TARGET/.git/hooks/fortress-hook-lib.sh"
+
+    HOOK_FILES=(pre-commit commit-msg pre-push prepare-commit-msg post-checkout post-merge pre-rebase post-commit pre-merge-commit applypatch-msg)
+    for hook in "${HOOK_FILES[@]}"; do
+        if [ -f "$TARGET/.git/hooks/$hook" ] && ! grep -q "@fortress-hook" "$TARGET/.git/hooks/$hook" 2>/dev/null; then
+            cp "$TARGET/.git/hooks/$hook" "$TARGET/.git/hooks/${hook}.pre-fortress.bak"
+        fi
+        download "hooks/active/$hook" "$TARGET/.git/hooks/$hook"
+        chmod +x "$TARGET/.git/hooks/$hook"
+    done
+
+    rm -f "$HOOKS_INSTALLER"
+    INSTALLED+=("Git hooks (10 active hooks)")
+    echo "     Installed 10 git hooks to .git/hooks/"
+elif [ "$SHOULD_INSTALL_HOOKS" = true ]; then
+    echo "  ℹ  Not a git repository — skipping hooks"
+fi
+
+# --- CI/CD ---
+if [ "$INSTALL_CI" = true ]; then
+    SHOULD_INSTALL_CI=true
+elif [ "$SKIP_PROMPTS" = false ]; then
+    echo ""
+    read -p "  Install GitHub Actions PR protection workflow? [y/N] " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        SHOULD_INSTALL_CI=true
+    else
+        SHOULD_INSTALL_CI=false
+    fi
+else
+    SHOULD_INSTALL_CI=false
+fi
+
+if [ "$SHOULD_INSTALL_CI" = true ]; then
+    mkdir -p "$TARGET/.github/workflows"
+    download ".github/workflows/pr-protection.yml" "$TARGET/.github/workflows/fortress-pr-protection.yml"
+    INSTALLED+=("GitHub Actions PR protection")
+    echo "  ✓ Installed .github/workflows/fortress-pr-protection.yml"
+fi
+
 # --- Summary ---
 echo ""
 echo "  ────────────────────────────────────"
@@ -150,7 +240,10 @@ echo ""
 echo "  Next steps:"
 echo "    1. Edit .fortress.yml to configure parts and enforcement levels"
 echo "    2. Add .fortress.yml to version control"
-echo "    3. Start coding — your AI assistant will enforce the fortress"
+if echo "${INSTALLED[@]}" | grep -q "hooks"; then
+    echo "    3. Test hooks: git commit --allow-empty -m 'test: fortress check'"
+fi
+echo "    4. Start coding — your AI assistant will enforce the fortress"
 echo ""
-echo "  Full checklist: https://github.com/chuxolab/laravel-fortress"
+echo "  Full checklist: https://github.com/oilmonegov/laravel-fortress"
 echo ""

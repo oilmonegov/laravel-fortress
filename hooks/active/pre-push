@@ -1,0 +1,123 @@
+#!/bin/bash
+# @fortress-hook v1.1.0
+# pre-push — Runs before pushing to a remote
+#
+# Checks:
+#   - Runs test suite (configurable)
+#   - Runs PHPStan static analysis (configurable)
+#   - Runs composer audit (configurable)
+#   - Blocks direct push to protected branches
+#   - Extra caution when AI context detected
+
+set -euo pipefail
+
+REMOTE="$1"
+URL="$2"
+
+# Source the shared library
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+if [ ! -f "$LIB_FILE" ]; then
+    PACKAGE_LIB="$(git rev-parse --show-toplevel 2>/dev/null)/vendor/chuxolab/laravel-fortress/hooks/fortress-hook-lib.sh"
+    [ -f "$PACKAGE_LIB" ] && LIB_FILE="$PACKAGE_LIB"
+fi
+[ -f "$LIB_FILE" ] && source "$LIB_FILE" || {
+    fortress_header() { echo "[Fortress] $1"; }
+    fortress_pass() { echo "  ✓ $1"; }
+    fortress_fail() { echo "  ✗ $1"; }
+    fortress_warn() { echo "  ! $1"; }
+    fortress_skip() { echo "  – $1 (skipped)"; }
+    fortress_hook_enabled() { return 0; }
+    fortress_config_get() { echo "$2"; }
+    fortress_current_branch() { git rev-parse --abbrev-ref HEAD 2>/dev/null; }
+    fortress_is_protected_branch() { local b; b=$(fortress_current_branch); echo "main master production" | grep -qw "$b"; }
+    fortress_is_ai_context() { [ -n "${CLAUDE_CODE:-}" ] || [ -n "${CURSOR_SESSION:-}" ]; }
+    fortress_has_command() { command -v "$1" &>/dev/null; }
+}
+
+if ! fortress_hook_enabled "pre_push"; then
+    exit 0
+fi
+
+fortress_header "pre-push"
+
+ERRORS=0
+ROOT=$(git rev-parse --show-toplevel)
+TIMEOUT=$(fortress_config_get "timeout" "300")
+
+# --- Check 1: Block direct push to protected branches ---
+BLOCK_DIRECT=$(fortress_config_get "block_direct_push" "true")
+if [ "$BLOCK_DIRECT" = "true" ]; then
+    if fortress_is_protected_branch; then
+        if fortress_is_ai_context; then
+            fortress_fail "AI agents MUST NOT push directly to protected branches."
+            fortress_fail "Create a feature branch and open a pull request instead."
+            exit 1
+        else
+            fortress_warn "Pushing directly to protected branch: $(fortress_current_branch)"
+            fortress_warn "Consider using a feature branch + pull request workflow."
+        fi
+    else
+        fortress_pass "Branch: $(fortress_current_branch) (not protected)"
+    fi
+fi
+
+# --- Check 2: Run Tests ---
+RUN_TESTS=$(fortress_config_get "run_tests" "true")
+if [ "$RUN_TESTS" = "true" ]; then
+    if [ -f "$ROOT/artisan" ] && [ -f "$ROOT/vendor/bin/pest" ]; then
+        if timeout "$TIMEOUT" php "$ROOT/artisan" test --compact 2>&1; then
+            fortress_pass "Tests passed"
+        else
+            fortress_fail "Tests failed. Fix failing tests before pushing."
+            ERRORS=$((ERRORS + 1))
+        fi
+    elif [ -f "$ROOT/vendor/bin/phpunit" ]; then
+        if timeout "$TIMEOUT" "$ROOT/vendor/bin/phpunit" --no-progress 2>&1; then
+            fortress_pass "Tests passed"
+        else
+            fortress_fail "Tests failed. Fix failing tests before pushing."
+            ERRORS=$((ERRORS + 1))
+        fi
+    else
+        fortress_skip "Tests (no test runner found)"
+    fi
+fi
+
+# --- Check 3: PHPStan ---
+RUN_PHPSTAN=$(fortress_config_get "run_phpstan" "true")
+if [ "$RUN_PHPSTAN" = "true" ]; then
+    if [ -f "$ROOT/vendor/bin/phpstan" ]; then
+        if timeout "$TIMEOUT" "$ROOT/vendor/bin/phpstan" analyse --no-progress 2>&1; then
+            fortress_pass "PHPStan analysis passed"
+        else
+            fortress_fail "PHPStan found issues. Fix before pushing."
+            ERRORS=$((ERRORS + 1))
+        fi
+    else
+        fortress_skip "PHPStan (not installed)"
+    fi
+fi
+
+# --- Check 4: Composer Audit ---
+RUN_AUDIT=$(fortress_config_get "run_audit" "true")
+if [ "$RUN_AUDIT" = "true" ]; then
+    if fortress_has_command composer; then
+        if (cd "$ROOT" && composer audit --no-interaction 2>&1); then
+            fortress_pass "No known vulnerabilities"
+        else
+            fortress_warn "Composer audit found vulnerabilities (review before deploying)"
+        fi
+    else
+        fortress_skip "Composer audit (composer not found)"
+    fi
+fi
+
+# --- Result ---
+if [ "$ERRORS" -gt 0 ]; then
+    echo ""
+    fortress_fail "Push blocked: $ERRORS issue(s) found."
+    exit 1
+fi
+
+exit 0

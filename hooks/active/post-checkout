@@ -1,0 +1,69 @@
+#!/bin/bash
+# @fortress-hook v1.1.0
+# post-checkout — Runs after a branch checkout or file checkout
+#
+# Features:
+#   - Warns if composer.lock changed between branches
+#   - Warns if package-lock.json / bun.lockb changed
+#   - Optionally auto-runs composer install
+
+set -euo pipefail
+
+PREV_HEAD="$1"
+NEW_HEAD="$2"
+BRANCH_CHECKOUT="$3" # 1 = branch checkout, 0 = file checkout
+
+# Source the shared library
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+if [ ! -f "$LIB_FILE" ]; then
+    PACKAGE_LIB="$(git rev-parse --show-toplevel 2>/dev/null)/vendor/chuxolab/laravel-fortress/hooks/fortress-hook-lib.sh"
+    [ -f "$PACKAGE_LIB" ] && LIB_FILE="$PACKAGE_LIB"
+fi
+[ -f "$LIB_FILE" ] && source "$LIB_FILE" || {
+    fortress_header() { echo "[Fortress] $1"; }
+    fortress_warn() { echo "  ! $1"; }
+    fortress_info() { echo "  ℹ $1"; }
+    fortress_hook_enabled() { return 0; }
+    fortress_config_get() { echo "$2"; }
+    fortress_has_command() { command -v "$1" &>/dev/null; }
+}
+
+if ! fortress_hook_enabled "post_checkout"; then
+    exit 0
+fi
+
+# Only run on branch checkouts, not file checkouts
+if [ "$BRANCH_CHECKOUT" != "1" ]; then
+    exit 0
+fi
+
+# Skip if checking out the same commit (e.g., initial clone)
+if [ "$PREV_HEAD" = "$NEW_HEAD" ]; then
+    exit 0
+fi
+
+ROOT=$(git rev-parse --show-toplevel)
+
+# --- Check: composer.lock changed ---
+if git diff --name-only "$PREV_HEAD" "$NEW_HEAD" | grep -q '^composer\.lock$'; then
+    fortress_header "post-checkout"
+    fortress_warn "composer.lock has changed between branches"
+
+    AUTO_INSTALL=$(fortress_config_get "auto_composer_install" "false")
+    if [ "$AUTO_INSTALL" = "true" ] && fortress_has_command composer; then
+        fortress_info "Running: composer install"
+        (cd "$ROOT" && composer install --no-interaction --quiet)
+    else
+        fortress_info "Run: composer install"
+    fi
+fi
+
+# --- Check: package-lock.json / bun.lockb changed ---
+if git diff --name-only "$PREV_HEAD" "$NEW_HEAD" | grep -qE '^(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|bun\.lockb)$'; then
+    fortress_header "post-checkout"
+    fortress_warn "JS lock file has changed between branches"
+    fortress_info "Run: npm install (or your package manager's install command)"
+fi
+
+exit 0

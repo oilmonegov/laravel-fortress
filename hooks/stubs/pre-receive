@@ -1,0 +1,49 @@
+#!/bin/bash
+# @fortress-hook v1.1.0 (stub)
+# pre-receive — Server-side hook: runs on the remote before accepting a push
+#
+# Purpose:
+#   Enforce server-side policies that cannot be bypassed by client-side hooks.
+#   This runs on your Git server (GitHub Enterprise, GitLab self-hosted, Gitea, etc.).
+#
+#   Use cases:
+#   - Reject pushes that don't pass static analysis
+#   - Enforce branch naming conventions
+#   - Block force-pushes to protected branches
+#   - Reject commits without signed-off-by or conventional format
+#
+# Arguments:
+#   stdin: lines of "old-sha new-sha refname"
+#
+# Note: This hook runs on the SERVER, not the developer's machine.
+#       It is NOT installed by default. Copy to your Git server's hooks directory.
+#
+# To activate: Uncomment the implementation below and deploy to your server.
+
+# while read -r OLD_SHA NEW_SHA REFNAME; do
+#     BRANCH=$(echo "$REFNAME" | sed 's|refs/heads/||')
+#
+#     # Block force-push to protected branches
+#     PROTECTED_BRANCHES="main master production"
+#     if echo "$PROTECTED_BRANCHES" | grep -qw "$BRANCH"; then
+#         # Check if this is a force-push (old sha is not ancestor of new sha)
+#         if [ "$OLD_SHA" != "0000000000000000000000000000000000000000" ]; then
+#             if ! git merge-base --is-ancestor "$OLD_SHA" "$NEW_SHA" 2>/dev/null; then
+#                 echo "[Fortress] Force-push to $BRANCH is not allowed."
+#                 exit 1
+#             fi
+#         fi
+#     fi
+#
+#     # Check commit messages
+#     COMMITS=$(git rev-list "$OLD_SHA".."$NEW_SHA" 2>/dev/null || true)
+#     for COMMIT in $COMMITS; do
+#         MSG=$(git log -1 --format="%s" "$COMMIT")
+#         if ! echo "$MSG" | grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)'; then
+#             echo "[Fortress] Commit $COMMIT does not follow conventional format: $MSG"
+#             exit 1
+#         fi
+#     done
+# done
+
+exit 0

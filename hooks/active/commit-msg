@@ -1,0 +1,95 @@
+#!/bin/bash
+# @fortress-hook v1.1.0
+# commit-msg — Validates commit message format
+#
+# Checks:
+#   - Conventional commit format (type: description)
+#   - Minimum/maximum message length
+#   - Blocks WIP commits on protected branches
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+
+# Source the shared library
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+if [ ! -f "$LIB_FILE" ]; then
+    PACKAGE_LIB="$(git rev-parse --show-toplevel 2>/dev/null)/vendor/chuxolab/laravel-fortress/hooks/fortress-hook-lib.sh"
+    [ -f "$PACKAGE_LIB" ] && LIB_FILE="$PACKAGE_LIB"
+fi
+[ -f "$LIB_FILE" ] && source "$LIB_FILE" || {
+    fortress_header() { echo "[Fortress] $1"; }
+    fortress_pass() { echo "  ✓ $1"; }
+    fortress_fail() { echo "  ✗ $1"; }
+    fortress_hook_enabled() { return 0; }
+    fortress_config_get() { echo "$2"; }
+    fortress_current_branch() { git rev-parse --abbrev-ref HEAD 2>/dev/null; }
+    fortress_is_protected_branch() { local b; b=$(fortress_current_branch); echo "main master production" | grep -qw "$b"; }
+}
+
+if ! fortress_hook_enabled "commit_msg"; then
+    exit 0
+fi
+
+fortress_header "commit-msg"
+
+# Read the commit message (strip comments)
+MSG=$(sed '/^#/d' "$COMMIT_MSG_FILE" | head -1)
+FULL_MSG=$(sed '/^#/d' "$COMMIT_MSG_FILE")
+ERRORS=0
+
+# --- Check 1: Minimum length ---
+MIN_LENGTH=$(fortress_config_get "min_length" "10")
+if [ "${#MSG}" -lt "$MIN_LENGTH" ]; then
+    fortress_fail "Commit message too short (${#MSG} chars < ${MIN_LENGTH} minimum)"
+    ERRORS=$((ERRORS + 1))
+else
+    fortress_pass "Message length: ${#MSG} chars"
+fi
+
+# --- Check 2: Maximum length (first line) ---
+MAX_LENGTH=$(fortress_config_get "max_length" "72")
+if [ "${#MSG}" -gt "$MAX_LENGTH" ]; then
+    fortress_fail "First line too long (${#MSG} chars > ${MAX_LENGTH} max). Move details to the body."
+    ERRORS=$((ERRORS + 1))
+fi
+
+# --- Check 3: Conventional commit format ---
+CONVENTIONAL=$(fortress_config_get "conventional" "true")
+if [ "$CONVENTIONAL" = "true" ]; then
+    # Allow: type: description, type(scope): description, Merge branch/pull request
+    if echo "$MSG" | grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-zA-Z0-9_-]+\))?(!)?:\s.+'; then
+        fortress_pass "Conventional commit format"
+    elif echo "$MSG" | grep -qE '^Merge (branch|pull request|remote-tracking)'; then
+        fortress_pass "Merge commit (exempt from conventional format)"
+    elif echo "$MSG" | grep -qE '^Revert "'; then
+        fortress_pass "Revert commit (exempt from conventional format)"
+    else
+        fortress_fail "Not a conventional commit. Expected: type: description"
+        fortress_warn "Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+        ERRORS=$((ERRORS + 1))
+    fi
+fi
+
+# --- Check 4: Block WIP on protected branches ---
+BLOCK_WIP=$(fortress_config_get "block_wip_on_protected" "true")
+if [ "$BLOCK_WIP" = "true" ]; then
+    if echo "$MSG" | grep -qiE '^\s*(wip|fixup!|squash!|tmp|temp|todo)'; then
+        if fortress_is_protected_branch; then
+            fortress_fail "WIP/fixup commits are not allowed on protected branches"
+            ERRORS=$((ERRORS + 1))
+        else
+            fortress_warn "WIP commit detected (allowed on feature branches)"
+        fi
+    fi
+fi
+
+# --- Result ---
+if [ "$ERRORS" -gt 0 ]; then
+    echo ""
+    fortress_fail "Commit message rejected: $ERRORS issue(s). Edit your message and retry."
+    exit 1
+fi
+
+exit 0

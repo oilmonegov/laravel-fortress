@@ -150,6 +150,71 @@ fortress:
 
 See [`rules/.fortress.example.yml`](rules/.fortress.example.yml) for the full template and [`rules/README.md`](rules/README.md) for detailed documentation.
 
+## Git Hooks & Merge Protection
+
+The Laravel Fortress includes **10 active git hooks + 5 stubs** designed for AI-assisted development safety. When AI coding assistants write code, they move fast — these hooks add safety rails at the git level.
+
+### Why Hooks Matter for AI Development
+
+- AI agents can commit debug statements, .env files, and formatting violations at machine speed
+- Without merge protection, an AI agent could auto-merge directly to production branches
+- Conventional commit enforcement keeps your history clean and parseable
+- Pre-push test gates catch regressions before they reach the remote
+
+### Quick Install
+
+```bash
+# Via Composer (Laravel projects — recommended)
+composer require --dev chuxolab/laravel-fortress
+php artisan fortress:install
+
+# Via shell (any PHP project)
+curl -sL https://raw.githubusercontent.com/oilmonegov/laravel-fortress/main/install.sh | bash
+```
+
+### Hook Summary
+
+| Hook | Blocking | Purpose |
+|------|----------|---------|
+| `pre-commit` | Yes | Pint formatting, debug statements, .env files, secrets, file size |
+| `commit-msg` | Yes | Conventional commits, length limits, WIP blocking |
+| `pre-push` | Yes | Tests, PHPStan, composer audit, direct push blocking |
+| `prepare-commit-msg` | No | Auto-adds AI co-author tag, branch prefix |
+| `post-checkout` | No | Warns when lock files changed between branches |
+| `post-merge` | No | Lock file + migration change detection |
+| `pre-rebase` | Yes | Blocks rebase of protected branches |
+| `post-commit` | No | Advisory: strict_types check, TODO audit |
+| `pre-merge-commit` | Yes | **AI auto-merge blocker** (git 2.36+) |
+| `applypatch-msg` | Yes | Validates patch commit messages |
+
+### Merge Protection
+
+The `pre-merge-commit` hook detects AI context (Claude Code, Cursor, Windsurf, Copilot) and blocks auto-merge to protected branches. This is configurable but **strongly recommended** as the default:
+
+```yaml
+# .fortress.yml
+fortress:
+  merge_protection:
+    require_human_approval: true
+    block_ai_auto_merge: true
+    protected_branches: [main, master, production]
+```
+
+A complementary GitHub Actions workflow (`pr-protection.yml`) enforces human review approval and blocks bot auto-merge at the CI level.
+
+### Artisan Commands
+
+| Command | Purpose |
+|---------|---------|
+| `fortress:install` | Interactive installer — rules, hooks, CI, config |
+| `fortress:hooks install` | Install git hooks (with `--select` for interactive selection) |
+| `fortress:hooks list` | Show installed fortress hooks |
+| `fortress:hooks uninstall` | Remove fortress hooks, restore backups |
+| `fortress:check` | Run compliance scan (strict_types, debug stmts, .env, etc.) |
+| `fortress:check --fix` | Auto-fix issues where possible |
+
+See [`hooks/README.md`](hooks/README.md) for full hook documentation.
+
 ## Not a Style Guide
 
 This document does not prescribe tabs vs spaces or where to put your braces. It prescribes **engineering discipline**: how to handle money without rounding errors, how to prevent race conditions on financial records, how to structure authentication so privilege escalation is impossible, how to design migrations that don't cause downtime.

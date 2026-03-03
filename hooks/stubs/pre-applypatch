@@ -1,0 +1,52 @@
+#!/bin/bash
+# @fortress-hook v1.1.0 (stub)
+# pre-applypatch — Runs after a patch is applied but before the commit
+#
+# Purpose:
+#   Validate the working tree state after applying a patch via git-am,
+#   but before the commit is created. Similar to pre-commit but specifically
+#   for patches.
+#
+#   Use cases:
+#   - Run tests on the patched code
+#   - Verify Pint formatting after patch
+#   - Check that the patch doesn't introduce debug statements
+#   - Validate strict_types in new PHP files from patch
+#
+# Arguments: None (uses the working tree state)
+#
+# To activate: Uncomment the implementation below and customize.
+
+# HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+# LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+# [ -f "$LIB_FILE" ] && source "$LIB_FILE"
+#
+# ROOT=$(git rev-parse --show-toplevel)
+#
+# fortress_header "pre-applypatch"
+#
+# # Run Pint on changed files
+# if [ -f "$ROOT/vendor/bin/pint" ]; then
+#     CHANGED_PHP=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.php$' || true)
+#     if [ -n "$CHANGED_PHP" ]; then
+#         if ! echo "$CHANGED_PHP" | xargs "$ROOT/vendor/bin/pint" --test --quiet 2>/dev/null; then
+#             fortress_fail "Pint violations in patched files. Run: vendor/bin/pint --dirty"
+#             exit 1
+#         fi
+#         fortress_pass "Pint formatting OK"
+#     fi
+# fi
+#
+# # Check for debug statements
+# CHANGED_PHP=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.php$' || true)
+# if [ -n "$CHANGED_PHP" ]; then
+#     while IFS= read -r file; do
+#         if [ -f "$ROOT/$file" ] && grep -nE '\b(dd|dump|ray|var_dump)\s*\(' "$ROOT/$file" 2>/dev/null; then
+#             fortress_fail "Debug statement in patched file: $file"
+#             exit 1
+#         fi
+#     done <<< "$CHANGED_PHP"
+#     fortress_pass "No debug statements in patch"
+# fi
+
+exit 0

@@ -1,0 +1,48 @@
+#!/bin/bash
+# @fortress-hook v1.1.0
+# pre-rebase — Runs before a rebase operation
+#
+# Checks:
+#   - Blocks rebase of protected branches (main, master, production)
+
+set -euo pipefail
+
+UPSTREAM="$1"
+BRANCH="${2:-$(git rev-parse --abbrev-ref HEAD)}"
+
+# Source the shared library
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+if [ ! -f "$LIB_FILE" ]; then
+    PACKAGE_LIB="$(git rev-parse --show-toplevel 2>/dev/null)/vendor/chuxolab/laravel-fortress/hooks/fortress-hook-lib.sh"
+    [ -f "$PACKAGE_LIB" ] && LIB_FILE="$PACKAGE_LIB"
+fi
+[ -f "$LIB_FILE" ] && source "$LIB_FILE" || {
+    fortress_header() { echo "[Fortress] $1"; }
+    fortress_pass() { echo "  ✓ $1"; }
+    fortress_fail() { echo "  ✗ $1"; }
+    fortress_hook_enabled() { return 0; }
+    fortress_config_get() { echo "$2"; }
+}
+
+if ! fortress_hook_enabled "pre_rebase"; then
+    exit 0
+fi
+
+# --- Check: Block rebase of protected branches ---
+BLOCK_PROTECTED=$(fortress_config_get "block_protected" "true")
+if [ "$BLOCK_PROTECTED" = "true" ]; then
+    PROTECTED=$(fortress_config_get "protected_branches" "main,master,production")
+    PROTECTED_LIST=$(echo "$PROTECTED" | tr -d '[]' | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+    if echo "$PROTECTED_LIST" | grep -qx "$BRANCH"; then
+        fortress_header "pre-rebase"
+        fortress_fail "Rebasing protected branch '$BRANCH' is not allowed."
+        fortress_fail "Protected branches: $(echo "$PROTECTED_LIST" | tr '\n' ', ' | sed 's/,$//')"
+        echo ""
+        fortress_fail "Use merge instead: git merge $UPSTREAM"
+        exit 1
+    fi
+fi
+
+exit 0

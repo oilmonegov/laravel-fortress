@@ -1,0 +1,38 @@
+{
+    "name": "chuxolab/laravel-fortress",
+    "description": "1,755 engineering checks for secure, correct, auditable Laravel applications — with git hooks and merge protection",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "security",
+        "audit",
+        "checklist",
+        "code-quality",
+        "git-hooks",
+        "merge-protection"
+    ],
+    "authors": [
+        {
+            "name": "Chux Okafor"
+        }
+    ],
+    "homepage": "https://github.com/oilmonegov/laravel-fortress",
+    "require": {
+        "php": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fortress\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Fortress\\FortressServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

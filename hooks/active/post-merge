@@ -1,0 +1,67 @@
+#!/bin/bash
+# @fortress-hook v1.1.0
+# post-merge — Runs after a successful merge (including git pull)
+#
+# Features:
+#   - Warns if composer.lock changed
+#   - Warns if JS lock files changed
+#   - Optionally auto-runs composer install
+
+set -euo pipefail
+
+SQUASH_MERGE="$1" # 1 = squash merge, 0 = normal merge
+
+# Source the shared library
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+if [ ! -f "$LIB_FILE" ]; then
+    PACKAGE_LIB="$(git rev-parse --show-toplevel 2>/dev/null)/vendor/chuxolab/laravel-fortress/hooks/fortress-hook-lib.sh"
+    [ -f "$PACKAGE_LIB" ] && LIB_FILE="$PACKAGE_LIB"
+fi
+[ -f "$LIB_FILE" ] && source "$LIB_FILE" || {
+    fortress_header() { echo "[Fortress] $1"; }
+    fortress_warn() { echo "  ! $1"; }
+    fortress_info() { echo "  ℹ $1"; }
+    fortress_hook_enabled() { return 0; }
+    fortress_config_get() { echo "$2"; }
+    fortress_has_command() { command -v "$1" &>/dev/null; }
+}
+
+if ! fortress_hook_enabled "post_merge"; then
+    exit 0
+fi
+
+ROOT=$(git rev-parse --show-toplevel)
+
+# Check what files changed in the merge
+CHANGED_FILES=$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD 2>/dev/null || true)
+
+# --- Check: composer.lock changed ---
+if echo "$CHANGED_FILES" | grep -q '^composer\.lock$'; then
+    fortress_header "post-merge"
+    fortress_warn "composer.lock changed during merge"
+
+    AUTO_INSTALL=$(fortress_config_get "auto_composer_install" "false")
+    if [ "$AUTO_INSTALL" = "true" ] && fortress_has_command composer; then
+        fortress_info "Running: composer install"
+        (cd "$ROOT" && composer install --no-interaction --quiet)
+    else
+        fortress_info "Run: composer install"
+    fi
+fi
+
+# --- Check: JS lock files changed ---
+if echo "$CHANGED_FILES" | grep -qE '^(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|bun\.lockb)$'; then
+    fortress_header "post-merge"
+    fortress_warn "JS lock file changed during merge"
+    fortress_info "Run: npm install (or your package manager's install command)"
+fi
+
+# --- Check: migrations changed ---
+if echo "$CHANGED_FILES" | grep -q '^database/migrations/'; then
+    fortress_header "post-merge"
+    fortress_warn "Database migrations changed during merge"
+    fortress_info "Run: php artisan migrate"
+fi
+
+exit 0

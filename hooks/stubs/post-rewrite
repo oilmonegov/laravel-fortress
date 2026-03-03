@@ -1,0 +1,39 @@
+#!/bin/bash
+# @fortress-hook v1.1.0 (stub)
+# post-rewrite — Runs after commands that rewrite commits (git commit --amend, git rebase)
+#
+# Purpose:
+#   Re-run post-commit checks after amend/rebase rewrites history.
+#   Useful for ensuring strict_types, debug statements, and other checks
+#   still pass after history modification.
+#
+# Arguments:
+#   $1 = "amend" or "rebase"
+#   stdin: lines of "old-sha new-sha [extra-info]"
+#
+# To activate: Uncomment the implementation below and customize.
+
+# REWRITE_COMMAND="$1"
+
+# HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+# LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+# [ -f "$LIB_FILE" ] && source "$LIB_FILE"
+#
+# fortress_header "post-rewrite ($REWRITE_COMMAND)"
+#
+# while read -r OLD_SHA NEW_SHA EXTRA; do
+#     # Get files changed in the rewritten commit
+#     FILES=$(git diff-tree --no-commit-id --name-only -r "$NEW_SHA")
+#     PHP_FILES=$(echo "$FILES" | grep -E '\.php$' || true)
+#
+#     if [ -n "$PHP_FILES" ]; then
+#         # Check for debug statements in rewritten files
+#         while IFS= read -r file; do
+#             if [ -f "$file" ] && grep -nE '\b(dd|dump|ray|var_dump)\s*\(' "$file" 2>/dev/null; then
+#                 fortress_warn "Debug statement found in rewritten file: $file"
+#             fi
+#         done <<< "$PHP_FILES"
+#     fi
+# done
+
+exit 0

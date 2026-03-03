@@ -1,0 +1,50 @@
+#!/bin/bash
+# @fortress-hook v1.1.0 (stub)
+# update — Server-side hook: runs once per ref being updated
+#
+# Purpose:
+#   Per-branch validation on the server side. Unlike pre-receive which gets
+#   all refs at once, this hook is called once per ref, making it easier
+#   to apply branch-specific policies.
+#
+#   Use cases:
+#   - Different policies for different branches
+#   - Tag signing requirements
+#   - Branch deletion protection
+#   - Per-branch commit author restrictions
+#
+# Arguments:
+#   $1 = refname (e.g., refs/heads/main)
+#   $2 = old sha
+#   $3 = new sha
+#
+# Note: This hook runs on the SERVER, not the developer's machine.
+#
+# To activate: Uncomment the implementation below and deploy to your server.
+
+# REFNAME="$1"
+# OLD_SHA="$2"
+# NEW_SHA="$3"
+# BRANCH=$(echo "$REFNAME" | sed 's|refs/heads/||')
+# ZERO="0000000000000000000000000000000000000000"
+#
+# # Block branch deletion for protected branches
+# if [ "$NEW_SHA" = "$ZERO" ]; then
+#     PROTECTED_BRANCHES="main master production"
+#     if echo "$PROTECTED_BRANCHES" | grep -qw "$BRANCH"; then
+#         echo "[Fortress] Cannot delete protected branch: $BRANCH"
+#         exit 1
+#     fi
+# fi
+#
+# # Require signed tags
+# if echo "$REFNAME" | grep -q '^refs/tags/'; then
+#     TAG=$(echo "$REFNAME" | sed 's|refs/tags/||')
+#     TAG_TYPE=$(git cat-file -t "$NEW_SHA" 2>/dev/null || echo "unknown")
+#     if [ "$TAG_TYPE" != "tag" ]; then
+#         echo "[Fortress] Tag $TAG must be annotated (signed). Use: git tag -a $TAG"
+#         exit 1
+#     fi
+# fi
+
+exit 0

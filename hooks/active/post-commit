@@ -1,0 +1,75 @@
+#!/bin/bash
+# @fortress-hook v1.1.0
+# post-commit — Runs after a commit is created (advisory, non-blocking)
+#
+# Checks:
+#   - strict_types declaration in committed PHP files
+#   - TODO/FIXME audit in committed files
+
+set -euo pipefail
+
+# Source the shared library
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+if [ ! -f "$LIB_FILE" ]; then
+    PACKAGE_LIB="$(git rev-parse --show-toplevel 2>/dev/null)/vendor/chuxolab/laravel-fortress/hooks/fortress-hook-lib.sh"
+    [ -f "$PACKAGE_LIB" ] && LIB_FILE="$PACKAGE_LIB"
+fi
+[ -f "$LIB_FILE" ] && source "$LIB_FILE" || {
+    fortress_header() { echo "[Fortress] $1"; }
+    fortress_pass() { echo "  ✓ $1"; }
+    fortress_warn() { echo "  ! $1"; }
+    fortress_hook_enabled() { return 0; }
+    fortress_config_get() { echo "$2"; }
+}
+
+if ! fortress_hook_enabled "post_commit"; then
+    exit 0
+fi
+
+ROOT=$(git rev-parse --show-toplevel)
+
+# Get files changed in the last commit
+COMMITTED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD 2>/dev/null || true)
+PHP_FILES=$(echo "$COMMITTED_FILES" | grep -E '\.php$' || true)
+
+WARNINGS=0
+
+# --- Check 1: strict_types ---
+CHECK_STRICT=$(fortress_config_get "check_strict_types" "true")
+if [ "$CHECK_STRICT" = "true" ] && [ -n "$PHP_FILES" ]; then
+    MISSING_STRICT=""
+    while IFS= read -r file; do
+        if [ -f "$ROOT/$file" ]; then
+            if ! head -5 "$ROOT/$file" | grep -q 'declare(strict_types=1)'; then
+                MISSING_STRICT="$MISSING_STRICT $file"
+                WARNINGS=$((WARNINGS + 1))
+            fi
+        fi
+    done <<< "$PHP_FILES"
+
+    if [ -n "$MISSING_STRICT" ]; then
+        fortress_header "post-commit (advisory)"
+        fortress_warn "Missing declare(strict_types=1) in:$MISSING_STRICT"
+    fi
+fi
+
+# --- Check 2: TODOs ---
+CHECK_TODOS=$(fortress_config_get "check_todos" "false")
+if [ "$CHECK_TODOS" = "true" ] && [ -n "$COMMITTED_FILES" ]; then
+    TODO_COUNT=0
+    while IFS= read -r file; do
+        if [ -f "$ROOT/$file" ]; then
+            FILE_TODOS=$(grep -cnE '\b(TODO|FIXME|HACK|XXX)\b' "$ROOT/$file" 2>/dev/null || true)
+            TODO_COUNT=$((TODO_COUNT + FILE_TODOS))
+        fi
+    done <<< "$COMMITTED_FILES"
+
+    if [ "$TODO_COUNT" -gt 0 ]; then
+        [ "$WARNINGS" -eq 0 ] && fortress_header "post-commit (advisory)"
+        fortress_warn "$TODO_COUNT TODO/FIXME marker(s) in committed files"
+    fi
+fi
+
+# Advisory only — never block
+exit 0

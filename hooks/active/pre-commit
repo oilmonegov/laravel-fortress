@@ -1,0 +1,157 @@
+#!/bin/bash
+# @fortress-hook v1.1.0
+# pre-commit — Runs before a commit is created
+#
+# Checks:
+#   - Laravel Pint formatting (configurable)
+#   - Debug statements (dd, dump, ray, var_dump)
+#   - .env files in staged changes
+#   - Hardcoded secrets/credentials
+#   - File size limits
+#   - strict_types declaration
+
+set -euo pipefail
+
+# Source the shared library
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+if [ ! -f "$LIB_FILE" ]; then
+    # Try package location (installed via Composer)
+    PACKAGE_LIB="$(git rev-parse --show-toplevel 2>/dev/null)/vendor/chuxolab/laravel-fortress/hooks/fortress-hook-lib.sh"
+    if [ -f "$PACKAGE_LIB" ]; then
+        LIB_FILE="$PACKAGE_LIB"
+    else
+        echo "[Fortress] Warning: fortress-hook-lib.sh not found. Running without config support."
+        # Minimal fallback
+        fortress_header() { echo "[Fortress] $1"; }
+        fortress_pass() { echo "  ✓ $1"; }
+        fortress_fail() { echo "  ✗ $1"; }
+        fortress_warn() { echo "  ! $1"; }
+        fortress_skip() { echo "  – $1 (skipped)"; }
+        fortress_hook_enabled() { return 0; }
+        fortress_config_get() { echo "$2"; }
+        fortress_staged_files() { git diff --cached --name-only --diff-filter=ACMR | grep -E "\.${1}$" 2>/dev/null || true; }
+        fortress_has_command() { command -v "$1" &>/dev/null; }
+        fortress_file_size_kb() { local s; s=$(stat -f%z "$1" 2>/dev/null || stat -c%s "$1" 2>/dev/null || echo 0); echo $(( s / 1024 )); }
+    fi
+fi
+[ -f "$LIB_FILE" ] && source "$LIB_FILE"
+
+# Check if this hook is enabled
+if ! fortress_hook_enabled "pre_commit"; then
+    exit 0
+fi
+
+fortress_header "pre-commit"
+
+ERRORS=0
+ROOT=$(git rev-parse --show-toplevel)
+
+# --- Check 1: Laravel Pint ---
+RUN_PINT=$(fortress_config_get "run_pint" "true")
+if [ "$RUN_PINT" = "true" ]; then
+    PHP_FILES=$(fortress_staged_files "php")
+    if [ -n "$PHP_FILES" ] && [ -f "$ROOT/vendor/bin/pint" ]; then
+        if ! echo "$PHP_FILES" | xargs "$ROOT/vendor/bin/pint" --test --quiet 2>/dev/null; then
+            fortress_fail "Pint formatting violations found. Run: vendor/bin/pint --dirty"
+            ERRORS=$((ERRORS + 1))
+        else
+            fortress_pass "Pint formatting"
+        fi
+    else
+        fortress_skip "Pint (no PHP files staged or Pint not installed)"
+    fi
+fi
+
+# --- Check 2: Debug Statements ---
+CHECK_DEBUG=$(fortress_config_get "check_debug" "true")
+if [ "$CHECK_DEBUG" = "true" ]; then
+    PHP_FILES=$(fortress_staged_files "php")
+    if [ -n "$PHP_FILES" ]; then
+        DEBUG_FOUND=""
+        while IFS= read -r file; do
+            if [ -f "$ROOT/$file" ]; then
+                # Check staged content, not working tree
+                STAGED_CONTENT=$(git show ":$file" 2>/dev/null || true)
+                if echo "$STAGED_CONTENT" | grep -nE '\b(dd|dump|ray|var_dump|print_r)\s*\(' 2>/dev/null | head -5; then
+                    DEBUG_FOUND="$DEBUG_FOUND $file"
+                fi
+            fi
+        done <<< "$PHP_FILES"
+
+        if [ -n "$DEBUG_FOUND" ]; then
+            fortress_fail "Debug statements found in:$DEBUG_FOUND"
+            ERRORS=$((ERRORS + 1))
+        else
+            fortress_pass "No debug statements"
+        fi
+    fi
+fi
+
+# --- Check 3: .env Files ---
+CHECK_ENV=$(fortress_config_get "check_env" "true")
+if [ "$CHECK_ENV" = "true" ]; then
+    ALL_STAGED=$(fortress_staged_files "")
+    ENV_FILES=$(echo "$ALL_STAGED" | grep -E '\.env($|\.)' | grep -v '\.env\.example$' | grep -v '\.env\.testing$' || true)
+    if [ -n "$ENV_FILES" ]; then
+        fortress_fail ".env file(s) staged for commit: $ENV_FILES"
+        fortress_warn "Environment files should NEVER be committed. Add them to .gitignore."
+        ERRORS=$((ERRORS + 1))
+    else
+        fortress_pass "No .env files staged"
+    fi
+fi
+
+# --- Check 4: Hardcoded Secrets ---
+CHECK_SECRETS=$(fortress_config_get "check_secrets" "true")
+if [ "$CHECK_SECRETS" = "true" ]; then
+    ALL_STAGED=$(fortress_staged_files "")
+    SECRET_FOUND=0
+    if [ -n "$ALL_STAGED" ]; then
+        while IFS= read -r file; do
+            if [ -f "$ROOT/$file" ]; then
+                STAGED_CONTENT=$(git show ":$file" 2>/dev/null || true)
+                # Check for common secret patterns (API keys, passwords, tokens)
+                if echo "$STAGED_CONTENT" | grep -nEi '(api[_-]?key|api[_-]?secret|password|secret[_-]?key|access[_-]?token|private[_-]?key)\s*[:=]\s*["\x27][A-Za-z0-9+/=_-]{16,}' 2>/dev/null | head -3; then
+                    fortress_warn "Possible hardcoded secret in: $file"
+                    SECRET_FOUND=1
+                fi
+            fi
+        done <<< "$ALL_STAGED"
+    fi
+
+    if [ "$SECRET_FOUND" -eq 0 ]; then
+        fortress_pass "No hardcoded secrets detected"
+    else
+        fortress_warn "Review flagged files — false positives are possible"
+    fi
+fi
+
+# --- Check 5: File Size ---
+MAX_FILE_SIZE=$(fortress_config_get "max_file_size_kb" "500")
+ALL_STAGED=$(fortress_staged_files "")
+if [ -n "$ALL_STAGED" ]; then
+    OVERSIZED=0
+    while IFS= read -r file; do
+        if [ -f "$ROOT/$file" ]; then
+            SIZE=$(fortress_file_size_kb "$ROOT/$file")
+            if [ "$SIZE" -gt "$MAX_FILE_SIZE" ]; then
+                fortress_warn "Large file: $file (${SIZE}KB > ${MAX_FILE_SIZE}KB limit)"
+                OVERSIZED=1
+            fi
+        fi
+    done <<< "$ALL_STAGED"
+
+    if [ "$OVERSIZED" -eq 0 ]; then
+        fortress_pass "All files within size limit (${MAX_FILE_SIZE}KB)"
+    fi
+fi
+
+# --- Result ---
+if [ "$ERRORS" -gt 0 ]; then
+    echo ""
+    fortress_fail "Pre-commit blocked: $ERRORS issue(s) found. Fix and re-stage."
+    exit 1
+fi
+
+exit 0

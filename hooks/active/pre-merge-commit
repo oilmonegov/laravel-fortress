@@ -1,0 +1,66 @@
+#!/bin/bash
+# @fortress-hook v1.1.0
+# pre-merge-commit — Runs before a merge commit is created (git 2.36+)
+#
+# This is the PRIMARY AI auto-merge blocker.
+#
+# Checks:
+#   - Blocks AI agents from creating merge commits on protected branches
+#   - Requires human approval for merges to protected branches when AI detected
+
+set -euo pipefail
+
+# Source the shared library
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+if [ ! -f "$LIB_FILE" ]; then
+    PACKAGE_LIB="$(git rev-parse --show-toplevel 2>/dev/null)/vendor/chuxolab/laravel-fortress/hooks/fortress-hook-lib.sh"
+    [ -f "$PACKAGE_LIB" ] && LIB_FILE="$PACKAGE_LIB"
+fi
+[ -f "$LIB_FILE" ] && source "$LIB_FILE" || {
+    fortress_header() { echo "[Fortress] $1"; }
+    fortress_pass() { echo "  ✓ $1"; }
+    fortress_fail() { echo "  ✗ $1"; }
+    fortress_warn() { echo "  ! $1"; }
+    fortress_info() { echo "  ℹ $1"; }
+    fortress_hook_enabled() { return 0; }
+    fortress_config_get() { echo "$2"; }
+    fortress_current_branch() { git rev-parse --abbrev-ref HEAD 2>/dev/null; }
+    fortress_is_protected_branch() { local b; b=$(fortress_current_branch); echo "main master production" | grep -qw "$b"; }
+    fortress_is_ai_context() { [ -n "${CLAUDE_CODE:-}" ] || [ -n "${CURSOR_SESSION:-}" ] || [ -n "${WINDSURF_SESSION:-}" ] || [ -n "${COPILOT_AGENT:-}" ]; }
+}
+
+if ! fortress_hook_enabled "pre_merge_commit"; then
+    exit 0
+fi
+
+# --- Check: AI auto-merge to protected branches ---
+BLOCK_AI_MERGE=$(fortress_config_get "block_ai_auto_merge" "true")
+if [ "$BLOCK_AI_MERGE" = "true" ]; then
+    if fortress_is_ai_context && fortress_is_protected_branch; then
+        BRANCH=$(fortress_current_branch)
+        fortress_header "pre-merge-commit"
+        echo ""
+        fortress_fail "AI auto-merge to protected branches is BLOCKED."
+        fortress_fail "Target branch: $BRANCH"
+        echo ""
+        fortress_info "Human approval required. This is a safety measure to prevent"
+        fortress_info "AI agents from merging code into production branches without review."
+        echo ""
+        fortress_info "To merge manually:"
+        fortress_info "  1. Open a pull request"
+        fortress_info "  2. Get human review and approval"
+        fortress_info "  3. Merge via the GitHub/GitLab UI"
+        echo ""
+        fortress_info "Configure: merge_protection.block_ai_auto_merge in .fortress.yml"
+        exit 1
+    fi
+fi
+
+# If not AI context or not protected branch, allow
+if fortress_is_protected_branch 2>/dev/null; then
+    fortress_header "pre-merge-commit"
+    fortress_pass "Human merge to $(fortress_current_branch) — allowed"
+fi
+
+exit 0

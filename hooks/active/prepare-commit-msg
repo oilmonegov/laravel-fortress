@@ -1,0 +1,81 @@
+#!/bin/bash
+# @fortress-hook v1.1.0
+# prepare-commit-msg — Enriches commit messages before editing
+#
+# Features:
+#   - Adds AI co-author tag when AI context detected
+#   - Adds branch name prefix to commit message
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+COMMIT_SOURCE="${2:-}"
+SHA="${3:-}"
+
+# Source the shared library
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_FILE="$HOOK_DIR/fortress-hook-lib.sh"
+if [ ! -f "$LIB_FILE" ]; then
+    PACKAGE_LIB="$(git rev-parse --show-toplevel 2>/dev/null)/vendor/chuxolab/laravel-fortress/hooks/fortress-hook-lib.sh"
+    [ -f "$PACKAGE_LIB" ] && LIB_FILE="$PACKAGE_LIB"
+fi
+[ -f "$LIB_FILE" ] && source "$LIB_FILE" || {
+    fortress_hook_enabled() { return 0; }
+    fortress_config_get() { echo "$2"; }
+    fortress_current_branch() { git rev-parse --abbrev-ref HEAD 2>/dev/null; }
+    fortress_is_ai_context() { [ -n "${CLAUDE_CODE:-}" ] || [ -n "${CURSOR_SESSION:-}" ]; }
+}
+
+if ! fortress_hook_enabled "prepare_commit_msg"; then
+    exit 0
+fi
+
+# Skip for merges, squashes, and amends
+if [ "$COMMIT_SOURCE" = "merge" ] || [ "$COMMIT_SOURCE" = "squash" ]; then
+    exit 0
+fi
+
+MSG=$(cat "$COMMIT_MSG_FILE")
+
+# --- Feature 1: Branch prefix ---
+ADD_BRANCH_PREFIX=$(fortress_config_get "add_branch_prefix" "false")
+if [ "$ADD_BRANCH_PREFIX" = "true" ] && [ "$COMMIT_SOURCE" != "message" ]; then
+    BRANCH=$(fortress_current_branch)
+    # Extract ticket ID from branch name (e.g., feature/PROJ-123-foo -> PROJ-123)
+    TICKET=$(echo "$BRANCH" | grep -oE '[A-Z]+-[0-9]+' | head -1 || true)
+    if [ -n "$TICKET" ]; then
+        # Only add if not already present
+        if ! echo "$MSG" | head -1 | grep -q "$TICKET"; then
+            sed -i.bak "1s/^/[$TICKET] /" "$COMMIT_MSG_FILE"
+            rm -f "${COMMIT_MSG_FILE}.bak"
+        fi
+    fi
+fi
+
+# --- Feature 2: AI co-author tag ---
+ADD_AI_COAUTHOR=$(fortress_config_get "add_ai_coauthor" "true")
+if [ "$ADD_AI_COAUTHOR" = "true" ]; then
+    if fortress_is_ai_context; then
+        # Determine which AI assistant is active
+        COAUTHOR=""
+        if [ -n "${CLAUDE_CODE:-}" ]; then
+            COAUTHOR="Co-Authored-By: Claude <noreply@anthropic.com>"
+        elif [ -n "${CURSOR_SESSION:-}" ]; then
+            COAUTHOR="Co-Authored-By: Cursor AI <noreply@cursor.com>"
+        elif [ -n "${WINDSURF_SESSION:-}" ]; then
+            COAUTHOR="Co-Authored-By: Windsurf AI <noreply@codeium.com>"
+        elif [ -n "${COPILOT_AGENT:-}" ]; then
+            COAUTHOR="Co-Authored-By: GitHub Copilot <noreply@github.com>"
+        else
+            COAUTHOR="Co-Authored-By: AI Assistant <noreply@example.com>"
+        fi
+
+        # Only add if not already present
+        if ! grep -qi "Co-Authored-By:.*" "$COMMIT_MSG_FILE" 2>/dev/null; then
+            echo "" >> "$COMMIT_MSG_FILE"
+            echo "$COAUTHOR" >> "$COMMIT_MSG_FILE"
+        fi
+    fi
+fi
+
+exit 0

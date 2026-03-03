@@ -93,3 +93,71 @@ fortress:
   # Rules below this severity level are ignored entirely.
   # Options: critical | warning | info
   minimum_severity: warning
+
+  # --- Git Hooks ---
+  # Fortress provides 10 active hooks + 5 stubs for AI-assisted development safety.
+  # Install via: php artisan fortress:hooks install
+  git_hooks:
+    enabled: true
+
+    pre_commit:
+      enabled: true
+      run_pint: true              # Run Laravel Pint on staged PHP files
+      check_debug: true           # Block dd(), dump(), ray(), var_dump()
+      check_env: true             # Block .env files from being committed
+      check_secrets: true         # Scan for hardcoded secrets/API keys
+      check_strict_types: false   # Check declare(strict_types=1) — advisory
+      max_file_size_kb: 500       # Warn on files larger than this
+
+    commit_msg:
+      enabled: true
+      conventional: true          # Require conventional commit format
+      min_length: 10              # Minimum commit message length
+      max_length: 72              # Maximum first-line length
+      block_wip_on_protected: true # Block WIP/fixup on protected branches
+
+    pre_push:
+      enabled: true
+      run_tests: true             # Run test suite before push
+      run_phpstan: true           # Run PHPStan static analysis
+      run_audit: true             # Run composer audit
+      block_direct_push: true     # Block direct push to protected branches
+      timeout: 300                # Max seconds for tests/analysis
+
+    prepare_commit_msg:
+      enabled: true
+      add_ai_coauthor: true       # Auto-add Co-Authored-By for AI assistants
+      add_branch_prefix: false    # Prepend branch ticket ID to commit message
+
+    post_checkout:
+      enabled: true
+      auto_composer_install: false # Auto-run composer install on lock change
+
+    post_merge:
+      enabled: true
+      auto_composer_install: false # Auto-run composer install on lock change
+
+    pre_rebase:
+      enabled: true
+      block_protected: true       # Block rebase of protected branches
+
+    post_commit:
+      enabled: true
+      check_strict_types: true    # Advisory: warn on missing strict_types
+      check_todos: false          # Advisory: count TODO/FIXME markers
+
+    pre_merge_commit:
+      enabled: true               # AI auto-merge blocker (git 2.36+)
+
+    applypatch_msg:
+      enabled: true               # Validate patch commit messages
+
+  # --- Merge Protection ---
+  # STRONGLY RECOMMENDED: Keep require_human_approval: true
+  # This prevents AI agents from auto-merging to production branches.
+  merge_protection:
+    require_human_approval: true
+    require_review_count: 1
+    block_ai_auto_merge: true
+    protected_branches: [main, master, production]
+    allow_ai_to_draft_pr: true    # AI can create draft PRs, humans merge
