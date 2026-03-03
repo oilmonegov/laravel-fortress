@@ -100,7 +100,7 @@ class InstallCommand extends Command
 
         $source = $this->packagePath('rules/.fortress.example.yml');
         if (! file_exists($source)) {
-            $this->components->error('Source config not found: ' . $source);
+            $this->components->error('Source config not found: '.$source);
 
             return;
         }
@@ -126,7 +126,7 @@ class InstallCommand extends Command
             );
         } else {
             $editors = $detectedEditors;
-            note('Detected editors: ' . implode(', ', array_map('ucfirst', $editors)));
+            note('Detected editors: '.implode(', ', array_map('ucfirst', $editors)));
         }
 
         foreach ($editors as $editor) {
@@ -281,6 +281,6 @@ class InstallCommand extends Command
 
     private function packagePath(string $path): string
     {
-        return dirname(__DIR__, 2) . '/' . $path;
+        return dirname(__DIR__, 2).'/'.$path;
     }
 }

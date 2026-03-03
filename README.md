@@ -126,7 +126,47 @@ Auto-fix what's fixable:
 php artisan fortress:check --fix
 ```
 
-### 5. PR Merge Protection
+### 5. Deep Code Review
+
+```bash
+php artisan fortress:review
+```
+
+Runs **52 automated checks** across all 14 parts — far deeper than `fortress:check`. Every finding documents both the **problem** and the **recommended solution**, with code snippets.
+
+```bash
+php artisan fortress:review my-sprint        # Named review
+php artisan fortress:review --part=P01       # Specific parts only
+php artisan fortress:review --part=P01 --part=P05
+php artisan fortress:review --severity=critical  # Only critical findings
+php artisan fortress:review --select         # Interactive part selection
+php artisan fortress:review --format=console # Print findings to terminal
+```
+
+Reports are saved to `docs/fortress-reviews/review-{name}-{date}-{time}-{id}.md` with:
+
+- Summary table (findings by severity)
+- Findings grouped by part, then severity (critical first)
+- Each finding shows: rule ID, file:line, problem description, solution, code snippet
+
+| Part | Focus | Checks |
+|:----:|-------|:------:|
+| P01 | Application Security | 8 |
+| P02 | Cryptography | 3 |
+| P03 | Auth & Authorization | 4 |
+| P04 | Data Integrity | 3 |
+| P05 | Financial Accuracy | 4 |
+| P06 | PHP Language | 5 |
+| P07 | Clean Code | 4 |
+| P08 | Laravel Framework | 6 |
+| P09 | Database | 4 |
+| P10 | Frontend | 3 |
+| P11 | Testing | 3 |
+| P12 | APIs & Queues | 2 |
+| P13 | Logging | 1 |
+| P14 | Infrastructure | 2 |
+
+### 6. PR Merge Protection
 
 A GitHub Actions workflow template that:
 
@@ -206,6 +246,12 @@ Full template: [`rules/.fortress.example.yml`](rules/.fortress.example.yml)
 | `fortress:check --fix` | Auto-fix issues where possible |
 | `fortress:check --select` | Choose which check to run |
 | `fortress:check --part=P01` | Scan a specific part |
+| `fortress:review` | Run deep code review (52 checks, markdown report) |
+| `fortress:review my-sprint` | Named review for organized reports |
+| `fortress:review --part=P01` | Review specific parts |
+| `fortress:review --severity=critical` | Filter by minimum severity |
+| `fortress:review --select` | Interactive part selection |
+| `fortress:review --format=console` | Print findings to terminal |
 
 ---
 

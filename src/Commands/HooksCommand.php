@@ -258,7 +258,7 @@ class HooksCommand extends Command
         // Check backups
         $backups = glob("{$hooksDir}/*.pre-fortress.bak") ?: [];
         if (count($backups) > 0) {
-            note(count($backups) . ' backup(s) found (.pre-fortress.bak)');
+            note(count($backups).' backup(s) found (.pre-fortress.bak)');
         }
 
         return self::SUCCESS;
@@ -287,6 +287,6 @@ class HooksCommand extends Command
 
     private function packagePath(string $path): string
     {
-        return dirname(__DIR__, 2) . '/' . $path;
+        return dirname(__DIR__, 2).'/'.$path;
     }
 }

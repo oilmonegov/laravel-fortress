@@ -96,7 +96,7 @@ class CheckCommand extends Command
             info('All checks passed.');
         } else {
             $remaining = $totalIssues - $totalFixed;
-            warning("{$totalIssues} issue(s) found" . ($totalFixed > 0 ? ", {$totalFixed} auto-fixed, {$remaining} remaining" : '') . '.');
+            warning("{$totalIssues} issue(s) found".($totalFixed > 0 ? ", {$totalFixed} auto-fixed, {$remaining} remaining" : '').'.');
 
             if (! $fix && $totalIssues > 0) {
                 $this->newLine();
@@ -193,7 +193,7 @@ class CheckCommand extends Command
 
             if (preg_match_all('/\b(dd|dump|ray|var_dump|print_r)\s*\(/', $content, $matches)) {
                 $issues += count($matches[0]);
-                $found[] = $file->getRelativePathname() . ' (' . implode(', ', array_unique($matches[1])) . ')';
+                $found[] = $file->getRelativePathname().' ('.implode(', ', array_unique($matches[1])).')';
             }
         }
 

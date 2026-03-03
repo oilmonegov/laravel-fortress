@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] - 2026-03-03
+
+### Added
+
+- **Deep code review**: `fortress:review` command with 52 automated checks across all 14 parts
+- **Review report generation**: Markdown reports saved to `docs/fortress-reviews/` with problem + solution documentation
+- **Extensible check architecture**: `FortressCheck` interface, `BaseCheck` abstract, `CheckResult` value object, `ReviewContext` for file discovery
+- **52 check classes**: P01 (8), P02 (3), P03 (4), P04 (3), P05 (4), P06 (5), P07 (4), P08 (6), P09 (4), P10 (3), P11 (3), P12 (2), P13 (1), P14 (2)
+- **Part filtering**: `--part=P01 --part=P05` to scope reviews
+- **Severity filtering**: `--severity=critical` to focus on high-impact findings
+- **Interactive selection**: `--select` for choosing parts interactively
+- **Console output**: `--format=console` for terminal-friendly output
+- **Financial checks**: Floating-point money detection, currency handling, rounding mode, money comparison (P05)
+- **Security checks**: SQL injection, XSS, CSRF, open redirect, mass assignment, secrets, deserialization (P01)
+
 ## [1.1.0] - 2026-03-03
 
 ### Added

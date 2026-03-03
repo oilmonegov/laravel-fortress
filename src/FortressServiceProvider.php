@@ -7,6 +7,7 @@ namespace Fortress;
 use Fortress\Commands\CheckCommand;
 use Fortress\Commands\HooksCommand;
 use Fortress\Commands\InstallCommand;
+use Fortress\Commands\ReviewCommand;
 use Illuminate\Support\ServiceProvider;
 
 class FortressServiceProvider extends ServiceProvider
@@ -18,6 +19,7 @@ class FortressServiceProvider extends ServiceProvider
                 InstallCommand::class,
                 HooksCommand::class,
                 CheckCommand::class,
+                ReviewCommand::class,
             ]);
         }
     }
