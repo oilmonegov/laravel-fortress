@@ -171,6 +171,108 @@ Each rule carries conditions that determine when it applies:
 | `testing: phpunit` | PHPUnit testing framework |
 | `has_redis` | Redis configured for cache, queue, or session |
 
+## Recommended Tools & Workflows
+
+The fortress defines *what* rules to enforce. These tools help your AI agent *how* to work with them effectively across the development lifecycle.
+
+### Claude Code
+
+Claude Code has the richest integration via modular skills and specialized sub-agents:
+
+| Workflow | Tool / Plugin | How It Uses the Fortress |
+|----------|--------------|--------------------------|
+| **Feature development** | `feature-dev` plugin (Anthropic) | Use `feature-dev:code-architect` to design features, then `feature-dev:code-reviewer` to verify the implementation against fortress rules. The architect reads relevant Part skills before proposing a design. |
+| **Code review** | `feature-dev:code-reviewer` | Point the reviewer at a diff or file set. It cross-references the fortress skills to flag violations by rule ID (e.g., `F-P01-003`). |
+| **Deep codebase analysis** | `feature-dev:code-explorer` | Traces execution paths and maps architecture. Combine with fortress skills to audit whether existing code meets standards. |
+| **Focused audit** | Fortress skills directly | Activate `fortress-security` when reviewing auth code, `fortress-financial` when reviewing money logic, etc. The agent applies only the relevant Part's rules. |
+| **Code simplification** | `laravel-simplifier` (if available) | After fortress review, simplify flagged code while preserving compliance. |
+
+**Skill activation pattern for Claude Code:**
+
+```
+# In your project's CLAUDE.md, add a skill activation table:
+| Domain                    | Fortress Skill(s) to Activate         |
+|---------------------------|---------------------------------------|
+| Auth, roles, permissions  | fortress-auth, fortress-security      |
+| Money, ledger, trades     | fortress-financial, fortress-security |
+| API endpoints, webhooks   | fortress-apis, fortress-security      |
+| Database migrations       | fortress-database                     |
+| Vue/Inertia pages         | fortress-frontend                     |
+| Tests                     | fortress-testing                      |
+| Any new code              | fortress-clean-code, fortress-php     |
+```
+
+### Cursor
+
+| Workflow | How It Works |
+|----------|-------------|
+| **Inline review** | Cursor reads `.cursorrules` automatically. When you ask it to review code or implement a feature, it applies fortress rules in context. |
+| **Chat review** | Ask: *"Review this file against the fortress security rules"* — Cursor references the embedded rules. |
+| **Composer mode** | For multi-file changes, Cursor applies rules across all touched files. |
+
+### Windsurf
+
+| Workflow | How It Works |
+|----------|-------------|
+| **Cascade flows** | Windsurf reads `.windsurfrules` and applies rules during its multi-step Cascade flows. |
+| **Code generation** | Rules constrain generated code to follow fortress standards. |
+| **Review commands** | Ask Windsurf to audit a file or directory against specific Parts. |
+
+### GitHub Copilot
+
+| Workflow | How It Works |
+|----------|-------------|
+| **Copilot Chat** | With `copilot-instructions.md` installed, Copilot Chat applies fortress rules when answering questions or generating code. |
+| **PR reviews** | Use Copilot's PR review feature — it will reference the fortress rules when evaluating changes. |
+| **Inline suggestions** | Copilot's completions are influenced by the rules, steering toward compliant patterns. |
+
+### Using the Fortress for Code Review
+
+The fortress is designed to be a code review companion. Here's a practical workflow for any editor:
+
+**1. Identify the affected domains**
+
+Look at which files the PR touches and map them to Parts:
+
+| Files Changed | Relevant Parts |
+|--------------|----------------|
+| Controllers, middleware, routes | P01 (Security), P03 (Auth), P08 (Laravel) |
+| Models, migrations | P08 (Laravel), P09 (Database), P04 (Concurrency) |
+| Money/financial logic | P05 (Financial), P04 (Concurrency) |
+| Vue/TS components | P10 (Frontend) |
+| Tests | P11 (Testing) |
+| Jobs, queues, webhooks | P12 (APIs & Queues) |
+| Config, deployment | P14 (Infrastructure) |
+
+**2. Run the review**
+
+Ask your AI agent:
+
+```
+Review this PR against fortress Parts P01, P03, and P08.
+Flag any violations with the rule ID.
+```
+
+Or for a focused security audit:
+
+```
+Audit this file for security issues using the fortress-security skill.
+Report each finding as: [Rule ID] Severity — Description — Line number.
+```
+
+**3. Use rule IDs in PR comments**
+
+Reference specific rules in review feedback:
+
+```
+[F-P01-003] CRITICAL — This query uses string interpolation instead of
+parameter binding. See Section 1 in Part I.
+```
+
+**4. Track compliance over time**
+
+Use rule IDs to tag issues in your project tracker. Over time, you'll see which Parts have the most violations and can prioritize team education.
+
 ## File Reference
 
 | File | Purpose |

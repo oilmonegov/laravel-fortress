@@ -22,7 +22,9 @@ This is not a style guide — it is an **engineering discipline framework** appl
 
 ## Table of Contents
 
-### Part I — Application Security
+> Browse individual parts in the [`parts/`](parts/) directory.
+
+### Part I — Application Security ([browse](parts/01-application-security.md))
 1. [Security — OWASP & Laravel-Specific](#1-security--owasp--laravel-specific)
 19. [API Security](#19-api-security)
 20. [Session & Cookie Security](#20-session--cookie-security)
@@ -46,7 +48,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 109. [CORS Misconfiguration](#109-cors-misconfiguration)
 110. [Supply Chain Attack Vectors (Frontend)](#110-supply-chain-attack-vectors-frontend)
 
-### Part II — Cryptography & Data Protection
+### Part II — Cryptography & Data Protection ([browse](parts/02-cryptography-data-protection.md))
 2. [Hashing, Encryption & Cryptography](#2-hashing-encryption--cryptography)
 83. [Password & Credential Management](#83-password--credential-management)
 84. [Two-Factor Authentication (2FA) Depth](#84-two-factor-authentication-2fa-depth)
@@ -60,7 +62,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 117. [Secrets Management (Vault / Cloud)](#117-secrets-management-vault--cloud)
 118. [Cryptographic Agility](#118-cryptographic-agility)
 
-### Part III — Authentication & Authorization
+### Part III — Authentication & Authorization ([browse](parts/03-authentication-authorization.md))
 3. [Authentication & Authorization](#3-authentication--authorization)
 4. [Mass Assignment & Sensitive Fields](#4-mass-assignment--sensitive-fields)
 81. [Policy Design Patterns](#81-policy-design-patterns)
@@ -75,7 +77,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 125. [Privilege Escalation Prevention](#125-privilege-escalation-prevention)
 126. [Impersonation Safety](#126-impersonation-safety)
 
-### Part IV — Data Integrity & Concurrency
+### Part IV — Data Integrity & Concurrency ([browse](parts/04-data-integrity-concurrency.md))
 5. [Concurrency, Transactions & Race Conditions](#5-concurrency-transactions--race-conditions)
 36. [State Machine Integrity](#36-state-machine-integrity)
 91. [Transaction Reference & Idempotency Patterns](#91-transaction-reference--idempotency-patterns)
@@ -88,7 +90,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 132. [Eventual Consistency Handling](#132-eventual-consistency-handling)
 133. [Conflict Resolution Strategies](#133-conflict-resolution-strategies)
 
-### Part V — Financial & Monetary Correctness
+### Part V — Financial & Monetary Correctness ([browse](parts/05-financial-monetary-correctness.md))
 6. [Money, Arithmetic & Precision](#6-money-arithmetic--precision)
 134. [Multi-Currency Translation (IAS 21)](#134-multi-currency-translation-ias-21)
 135. [Rounding Policy Registry](#135-rounding-policy-registry)
@@ -98,7 +100,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 139. [Inter-Company & Elimination Entries](#139-inter-company--elimination-entries)
 140. [Regulatory Compliance Checks (SOX / IFRS)](#140-regulatory-compliance-checks-sox--ifrs)
 
-### Part VI — PHP Language & Type Safety
+### Part VI — PHP Language & Type Safety ([browse](parts/06-php-language-type-safety.md))
 7. [Modern PHP Syntax (8.3/8.4)](#7-modern-php-syntax-8384)
 8. [Strict Typing & Type Safety](#8-strict-typing--type-safety)
 30. [Regex Safety (ReDoS)](#30-regex-safety-redos)
@@ -115,7 +117,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 147. [Property Hooks (PHP 8.4)](#147-property-hooks-php-84)
 148. [Asymmetric Visibility (PHP 8.4)](#148-asymmetric-visibility-php-84)
 
-### Part VII — Clean Code & Software Design
+### Part VII — Clean Code & Software Design ([browse](parts/07-clean-code-software-design.md))
 9. [Clean Code & SOLID Principles](#9-clean-code--solid-principles)
 57. [Code Readability & Cognitive Complexity](#57-code-readability--cognitive-complexity)
 72. [Interface & Contract Design](#72-interface--contract-design)
@@ -133,7 +135,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 157. [Immutability as a Default](#157-immutability-as-a-default)
 158. [Domain Primitives & Micro-Types](#158-domain-primitives--micro-types)
 
-### Part VIII — Laravel Framework Mastery
+### Part VIII — Laravel Framework Mastery ([browse](parts/08-laravel-framework-mastery.md))
 10. [Laravel Anti-Patterns](#10-laravel-anti-patterns)
 11. [Validation & Input Handling](#11-validation--input-handling)
 24. [Error Handling & Exception Design](#24-error-handling--exception-design)
@@ -158,7 +160,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 167. [Model Event Lifecycle Awareness](#167-model-event-lifecycle-awareness)
 168. [Action Pattern Discipline](#168-action-pattern-discipline)
 
-### Part IX — Database Engineering
+### Part IX — Database Engineering ([browse](parts/09-database-engineering.md))
 12. [Database, Migrations & Query Safety](#12-database-migrations--query-safety)
 41. [Eloquent Relationship & Polymorphic Safety](#41-eloquent-relationship--polymorphic-safety)
 42. [Pagination & Unbounded Query Prevention](#42-pagination--unbounded-query-prevention)
@@ -179,7 +181,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 177. [Foreign Key Cascade Strategy](#177-foreign-key-cascade-strategy)
 178. [Composite Key & Unique Constraint Pitfalls](#178-composite-key--unique-constraint-pitfalls)
 
-### Part X — Frontend Engineering
+### Part X — Frontend Engineering ([browse](parts/10-frontend-engineering.md))
 13. [Frontend Security & Quality](#13-frontend-security--quality)
 43. [Internationalization & Encoding Safety](#43-internationalization--encoding-safety)
 60. [Accessibility (A11y) Baseline](#60-accessibility-a11y-baseline)
@@ -198,7 +200,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 187. [Image Optimization & Lazy Loading](#187-image-optimization--lazy-loading)
 188. [Dark Mode Implementation](#188-dark-mode-implementation)
 
-### Part XI — Testing & Quality Assurance
+### Part XI — Testing & Quality Assurance ([browse](parts/11-testing-quality-assurance.md))
 14. [Testing Quality](#14-testing-quality)
 189. [Test Doubles: Mocks, Stubs, Fakes, Spies](#189-test-doubles-mocks-stubs-fakes-spies)
 190. [Mutation Testing](#190-mutation-testing)
@@ -209,7 +211,7 @@ This is not a style guide — it is an **engineering discipline framework** appl
 195. [Flaky Test Prevention](#195-flaky-test-prevention)
 196. [Code Coverage Strategy](#196-code-coverage-strategy)
 
-### Part XII — APIs, Queues & Integration
+### Part XII — APIs, Queues & Integration ([browse](parts/12-apis-queues-integration.md))
 22. [Queue & Job Safety](#22-queue--job-safety)
 45. [Webhook Receiving & Replay Prevention](#45-webhook-receiving--replay-prevention)
 46. [Multi-Tenancy & Data Isolation](#46-multi-tenancy--data-isolation)
@@ -227,12 +229,12 @@ This is not a style guide — it is an **engineering discipline framework** appl
 199. [Webhook Sending Best Practices](#199-webhook-sending-best-practices)
 200. [Message Queue Reliability Patterns](#200-message-queue-reliability-patterns)
 
-### Part XIII — Logging, Monitoring & Audit
+### Part XIII — Logging, Monitoring & Audit ([browse](parts/13-logging-monitoring-audit.md))
 16. [Logging, Monitoring & Audit Trails](#16-logging-monitoring--audit-trails)
 86. [Third-Party Package Audit](#86-third-party-package-audit)
 93. [Audit Trail Completeness](#93-audit-trail-completeness)
 
-### Part XIV — Infrastructure & Operations
+### Part XIV — Infrastructure & Operations ([browse](parts/14-infrastructure-operations.md))
 15. [Configuration, Secrets & Environment](#15-configuration-secrets--environment)
 17. [Dead Code & Unused Artifacts](#17-dead-code--unused-artifacts)
 18. [Dependency & Supply Chain Security](#18-dependency--supply-chain-security)

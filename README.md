@@ -72,7 +72,13 @@ This auto-detects your editor (Claude Code, Cursor, Windsurf, Copilot) and insta
 ## How to Use This
 
 ### During Code Review
-Open the relevant section(s) and verify the PR doesn't violate any checks. Copy specific checks into PR comments as review criteria.
+
+1. **Identify which Parts apply** — Map the PR's changed files to fortress Parts (controllers → P01/P03/P08, models → P08/P09, money logic → P05, etc.)
+2. **Review against the relevant Part(s)** — Open the part file or ask your AI assistant to review the diff against those rules
+3. **Reference rule IDs in comments** — Use `[F-P01-003]` format so findings are traceable and searchable
+4. **Use your AI agent** — Ask it: *"Review this PR against fortress Parts P01 and P08. Flag violations with rule IDs."*
+
+See [`rules/README.md`](rules/README.md#using-the-fortress-for-code-review) for the full code review workflow and recommended tools per editor.
 
 ### During Sprint Planning
 When scoping a new feature, scan the related parts to identify security, correctness, and testing requirements upfront — not as afterthoughts.
@@ -92,12 +98,14 @@ The Laravel Fortress includes a complete **AI skill system** that teaches your c
 
 ### Supported Editors
 
-| Editor | File | Installation |
-|--------|------|-------------|
-| **Claude Code** | 14 modular skills + `CLAUDE.md` | Auto-detected by installer |
-| **Cursor** | `.cursorrules` | Auto-detected by installer |
-| **Windsurf** | `.windsurfrules` | Auto-detected by installer |
-| **GitHub Copilot** | `.github/copilot-instructions.md` | Auto-detected by installer |
+| Editor | File | Recommended Workflow |
+|--------|------|---------------------|
+| **Claude Code** | 14 modular skills + `CLAUDE.md` | Use `feature-dev` plugin for architecture, implementation, and review with fortress skills active |
+| **Cursor** | `.cursorrules` | Inline review + Composer mode for multi-file fortress compliance |
+| **Windsurf** | `.windsurfrules` | Cascade flows apply rules automatically during multi-step generation |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Copilot Chat + PR review with fortress context |
+
+See [`rules/README.md`](rules/README.md#recommended-tools--workflows) for detailed recommended tools, workflow patterns, and how to use the fortress for code review with each editor.
 
 ### How It Works
 
