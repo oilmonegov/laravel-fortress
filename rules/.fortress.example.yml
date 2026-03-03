@@ -1,0 +1,95 @@
+# .fortress.yml — Project-level Laravel Fortress configuration
+# Copy this file to your project root and customize.
+#
+# The AI coding assistant reads this file to determine which rules
+# to enforce and at what level. If this file is absent, all parts
+# are enabled at "standard" enforcement.
+#
+# Documentation: https://github.com/chuxolab/laravel-fortress/blob/main/rules/README.md
+
+fortress:
+  version: "1.0.0"
+
+  # Stack override (auto-detected from composer.json / package.json if omitted)
+  # Uncomment and set only if auto-detection gives wrong results.
+  # stack:
+  #   php: "8.4"
+  #   laravel: "12"
+  #   database: "mysql"
+  #   frontend: "vue3"
+  #   testing: "pest"
+
+  # Per-part configuration
+  # Each part can be enabled/disabled and have its enforcement level set.
+  # Enforcement levels: strict | standard | relaxed
+  parts:
+    P01_application_security:
+      enabled: true
+      enforcement: strict          # Security should always be strict
+
+    P02_cryptography:
+      enabled: true
+      enforcement: strict          # Crypto errors are hard to detect
+
+    P03_authentication:
+      enabled: true
+      enforcement: strict          # Auth bypass = critical vulnerability
+
+    P04_data_integrity:
+      enabled: true
+      enforcement: standard
+
+    P05_financial_monetary:
+      enabled: true                # Enable for fintech / accounting apps
+      enforcement: strict          # Money bugs are silent and catastrophic
+
+    P06_php_language:
+      enabled: true
+      enforcement: standard
+
+    P07_clean_code:
+      enabled: true
+      enforcement: standard
+
+    P08_laravel_framework:
+      enabled: true
+      enforcement: standard
+
+    P09_database:
+      enabled: true
+      enforcement: standard
+
+    P10_frontend:
+      enabled: true                # Set to false for API-only projects
+      enforcement: standard
+
+    P11_testing:
+      enabled: true
+      enforcement: standard
+
+    P12_apis_queues:
+      enabled: true
+      enforcement: standard
+
+    P13_logging_audit:
+      enabled: true
+      enforcement: standard
+
+    P14_infrastructure:
+      enabled: true
+      enforcement: relaxed         # Many checks are environment-specific
+
+  # Per-rule overrides (optional)
+  # Override enforcement or disable specific rules.
+  # These take precedence over part-level settings.
+  # rules:
+  #   F-P01-001:
+  #     enforcement: strict        # Always strict on SQL injection
+  #   F-P08-042:
+  #     enabled: false
+  #     reason: "Not applicable — we use a custom ORM"
+
+  # Severity threshold
+  # Rules below this severity level are ignored entirely.
+  # Options: critical | warning | info
+  minimum_severity: warning

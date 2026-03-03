@@ -1,0 +1,152 @@
+# The Laravel Fortress
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Checks](https://img.shields.io/badge/checks-1%2C755-orange.svg)](#the-14-parts)
+
+**1,755 checks. 200 sections. 14 parts. One standard.**
+
+A comprehensive engineering standards checklist for building Laravel applications that are secure by default, correct under concurrency, auditable end-to-end, and maintainable at scale.
+
+---
+
+## Why This Exists
+
+Every Laravel project accumulates hard-won lessons — security holes patched at 2 AM, race conditions discovered in production, floating-point money bugs that silently corrupt ledgers, dead code that nobody dares delete. These lessons are usually trapped in individual developers' heads or scattered across PR comments.
+
+**The Laravel Fortress** captures those lessons as a single, actionable checklist. It was born from repeated codebase audits of a production financial platform and expanded into a universal reference applicable to any Laravel project.
+
+## What Following This Achieves
+
+| Outcome | What It Means |
+|---------|---------------|
+| **Security** | Survives OWASP Top 10 penetration tests, closes injection vectors, hardens auth, satisfies SOC 2 / ISO 27001 audits |
+| **Correctness** | Eliminates floating-point money bugs, race conditions, state machine bypasses, and silent data corruption |
+| **Auditability** | Complete, tamper-evident audit trail from user action to ledger entry |
+| **Maintainability** | Consistent patterns that let new developers navigate the codebase in hours, not weeks |
+| **Resilience** | Zero-downtime deployments, clear runbooks, no data loss under load |
+
+## Scope
+
+Laravel 9–12 &middot; PHP 8.1–8.4 &middot; MySQL / PostgreSQL &middot; Vue / React / Blade &middot; Tailwind CSS &middot; Redis &middot; Pest / PHPUnit
+
+> **Version agnostic**: The [AI skill system](#ai-integration) detects your project's actual versions and applies only the relevant rules.
+
+## The 14 Parts
+
+Browse individual parts in the [`parts/`](parts/) directory, or read the full [`checklist.md`](checklist.md).
+
+| Part | Focus | Sections | Checks | Browse |
+|------|-------|:--------:|:------:|--------|
+| **I** | Application Security | 22 | 179 | [`01-application-security.md`](parts/01-application-security.md) |
+| **II** | Cryptography & Data Protection | 12 | 109 | [`02-cryptography-data-protection.md`](parts/02-cryptography-data-protection.md) |
+| **III** | Authentication & Authorization | 13 | 110 | [`03-authentication-authorization.md`](parts/03-authentication-authorization.md) |
+| **IV** | Data Integrity & Concurrency | 11 | 84 | [`04-data-integrity-concurrency.md`](parts/04-data-integrity-concurrency.md) |
+| **V** | Financial & Monetary Correctness | 8 | 62 | [`05-financial-monetary-correctness.md`](parts/05-financial-monetary-correctness.md) |
+| **VI** | PHP Language & Type Safety | 15 | 126 | [`06-php-language-type-safety.md`](parts/06-php-language-type-safety.md) |
+| **VII** | Clean Code & Software Design | 16 | 128 | [`07-clean-code-software-design.md`](parts/07-clean-code-software-design.md) |
+| **VIII** | Laravel Framework Mastery | 23 | 196 | [`08-laravel-framework-mastery.md`](parts/08-laravel-framework-mastery.md) |
+| **IX** | Database Engineering | 19 | 158 | [`09-database-engineering.md`](parts/09-database-engineering.md) |
+| **X** | Frontend Engineering | 17 | 153 | [`10-frontend-engineering.md`](parts/10-frontend-engineering.md) |
+| **XI** | Testing & Quality Assurance | 9 | 76 | [`11-testing-quality-assurance.md`](parts/11-testing-quality-assurance.md) |
+| **XII** | APIs, Queues & Integration | 16 | 136 | [`12-apis-queues-integration.md`](parts/12-apis-queues-integration.md) |
+| **XIII** | Logging, Monitoring & Audit | 3 | 30 | [`13-logging-monitoring-audit.md`](parts/13-logging-monitoring-audit.md) |
+| **XIV** | Infrastructure & Operations | 16 | 208 | [`14-infrastructure-operations.md`](parts/14-infrastructure-operations.md) |
+
+## Quick Start
+
+### Read the checklist
+
+1. **Full reference** &mdash; [`checklist.md`](checklist.md) (all 200 sections in one file)
+2. **By part** &mdash; Browse [`parts/`](parts/) for the topic you're working on
+3. **Work through the checks** &mdash; each one is a `- [ ]` checkbox you can tick off
+
+### Install the AI skill (recommended)
+
+```bash
+curl -sL https://raw.githubusercontent.com/chuxolab/laravel-fortress/main/install.sh | bash
+```
+
+This auto-detects your editor (Claude Code, Cursor, Windsurf, Copilot) and installs the appropriate rule files. See [AI Integration](#ai-integration) below.
+
+## How to Use This
+
+### During Code Review
+Open the relevant section(s) and verify the PR doesn't violate any checks. Copy specific checks into PR comments as review criteria.
+
+### During Sprint Planning
+When scoping a new feature, scan the related parts to identify security, correctness, and testing requirements upfront — not as afterthoughts.
+
+### For Onboarding
+Give new team members Parts VI–VIII (PHP, Clean Code, Laravel Mastery) as required reading. It's faster than explaining conventions one PR at a time.
+
+### As an Audit Checklist
+Walk through the entire document systematically when preparing for a security audit, compliance review, or codebase health assessment.
+
+### In CI/CD
+Many checks can be automated. Static analysis (PHPStan), linting (Pint), dependency audits (`composer audit`), and test coverage thresholds can enforce checks continuously.
+
+## AI Integration
+
+The Laravel Fortress includes a complete **AI skill system** that teaches your coding assistant all 1,755 checks. The system is **version-agnostic** — it detects your project's PHP version, Laravel version, database, and packages at runtime and applies only the relevant rules.
+
+### Supported Editors
+
+| Editor | File | Installation |
+|--------|------|-------------|
+| **Claude Code** | 14 modular skills + `CLAUDE.md` | Auto-detected by installer |
+| **Cursor** | `.cursorrules` | Auto-detected by installer |
+| **Windsurf** | `.windsurfrules` | Auto-detected by installer |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Auto-detected by installer |
+
+### How It Works
+
+1. The AI reads your `composer.json`, `package.json`, and `.env` to build a project profile
+2. It reads `.fortress.yml` (if present) to check which parts are enabled
+3. For each rule, it checks whether the rule applies to your detected stack
+4. Rules are enforced at the configured enforcement level (strict / standard / relaxed)
+
+### Configuration
+
+Create a `.fortress.yml` in your project root:
+
+```yaml
+fortress:
+  version: "1.0.0"
+
+  parts:
+    P01_application_security:
+      enabled: true
+      enforcement: strict
+
+    P05_financial_monetary:
+      enabled: true
+      enforcement: strict       # Critical for fintech apps
+
+    P10_frontend:
+      enabled: false            # Disable for API-only projects
+
+  minimum_severity: warning     # Ignore 'info' level rules
+```
+
+See [`rules/.fortress.example.yml`](rules/.fortress.example.yml) for the full template and [`rules/README.md`](rules/README.md) for detailed documentation.
+
+## Not a Style Guide
+
+This document does not prescribe tabs vs spaces or where to put your braces. It prescribes **engineering discipline**: how to handle money without rounding errors, how to prevent race conditions on financial records, how to structure authentication so privilege escalation is impossible, how to design migrations that don't cause downtime.
+
+Style is preference. Discipline is survival.
+
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+The bar for new checks is: **"Would this have prevented a real bug, security vulnerability, or production incident?"** If yes, it belongs here. If it's a matter of preference, it doesn't.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+Built with hard-won lessons from production. Maintained by the community.
