@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 5 — Financial & Monetary Correctness. 8 se
 # Fortress: Financial & Monetary Correctness
 
 > Part V of The Laravel Fortress — 8 sections · 62 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/05-financial-monetary-correctness.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/05-financial-monetary-correctness.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

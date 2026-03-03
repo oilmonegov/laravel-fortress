@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 8 — Laravel Framework Mastery. 23 sections
 # Fortress: Laravel Framework Mastery
 
 > Part VIII of The Laravel Fortress — 23 sections · 196 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/08-laravel-framework-mastery.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/08-laravel-framework-mastery.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

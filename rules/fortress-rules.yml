@@ -1,5 +1,5 @@
 # fortress-rules.yml — Master rule registry for The Laravel Fortress
-# https://github.com/chuxolab/laravel-fortress
+# https://github.com/oilmonegov/laravel-fortress
 #
 # This file contains all 1,755 checks as machine-readable rules.
 # AI coding assistants consume this to enforce project standards.

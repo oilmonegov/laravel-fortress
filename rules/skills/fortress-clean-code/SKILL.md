@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 7 — Clean Code & Software Design. 16 secti
 # Fortress: Clean Code & Software Design
 
 > Part VII of The Laravel Fortress — 16 sections · 128 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/07-clean-code-software-design.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/07-clean-code-software-design.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

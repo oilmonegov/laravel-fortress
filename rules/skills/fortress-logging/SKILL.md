@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 13 — Logging, Monitoring & Audit. 3 sectio
 # Fortress: Logging, Monitoring & Audit
 
 > Part XIII of The Laravel Fortress — 3 sections · 30 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/13-logging-monitoring-audit.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/13-logging-monitoring-audit.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

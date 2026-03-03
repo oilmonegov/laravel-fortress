@@ -5,7 +5,7 @@
 # to enforce and at what level. If this file is absent, all parts
 # are enabled at "standard" enforcement.
 #
-# Documentation: https://github.com/chuxolab/laravel-fortress/blob/main/rules/README.md
+# Documentation: https://github.com/oilmonegov/laravel-fortress/blob/main/rules/README.md
 
 fortress:
   version: "1.0.0"

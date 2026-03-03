@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 4 — Data Integrity & Concurrency. 11 secti
 # Fortress: Data Integrity & Concurrency
 
 > Part IV of The Laravel Fortress — 11 sections · 84 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/04-data-integrity-concurrency.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/04-data-integrity-concurrency.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

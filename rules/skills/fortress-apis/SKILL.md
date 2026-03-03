@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 12 — APIs, Queues & Integration. 16 sectio
 # Fortress: APIs, Queues & Integration
 
 > Part XII of The Laravel Fortress — 16 sections · 136 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/12-apis-queues-integration.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/12-apis-queues-integration.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

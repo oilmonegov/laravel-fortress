@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 3 — Authentication & Authorization. 13 sec
 # Fortress: Authentication & Authorization
 
 > Part III of The Laravel Fortress — 13 sections · 110 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/03-authentication-authorization.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/03-authentication-authorization.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

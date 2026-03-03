@@ -23,13 +23,13 @@ The Laravel Fortress AI skill system makes your coding assistant (Claude Code, C
 ### One-liner (recommended)
 
 ```bash
-curl -sL https://raw.githubusercontent.com/chuxolab/laravel-fortress/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/oilmonegov/laravel-fortress/main/install.sh | bash
 ```
 
 Or from a specific directory:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/chuxolab/laravel-fortress/main/install.sh | bash -s /path/to/your/project
+curl -sL https://raw.githubusercontent.com/oilmonegov/laravel-fortress/main/install.sh | bash -s /path/to/your/project
 ```
 
 The installer auto-detects your editor and installs the appropriate files.

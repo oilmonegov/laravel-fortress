@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 9 — Database Engineering. 19 sections, 158
 # Fortress: Database Engineering
 
 > Part IX of The Laravel Fortress — 19 sections · 158 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/09-database-engineering.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/09-database-engineering.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

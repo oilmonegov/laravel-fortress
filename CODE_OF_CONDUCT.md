@@ -33,7 +33,7 @@ This Code of Conduct applies within all community spaces, and also applies when 
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported via [GitHub Issues](https://github.com/chuxolab/laravel-fortress/issues).
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported via [GitHub Issues](https://github.com/oilmonegov/laravel-fortress/issues).
 
 All complaints will be reviewed and investigated promptly and fairly.
 

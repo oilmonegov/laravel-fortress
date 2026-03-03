@@ -2,7 +2,7 @@
 # install.sh — Install Laravel Fortress rules into your project
 #
 # Usage:
-#   curl -sL https://raw.githubusercontent.com/chuxolab/laravel-fortress/main/install.sh | bash
+#   curl -sL https://raw.githubusercontent.com/oilmonegov/laravel-fortress/main/install.sh | bash
 #   ./install.sh /path/to/your/project
 #
 # This script detects your editor and copies the appropriate rule files.

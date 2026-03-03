@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 2 — Cryptography & Data Protection. 12 sec
 # Fortress: Cryptography & Data Protection
 
 > Part II of The Laravel Fortress — 12 sections · 109 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/02-cryptography-data-protection.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/02-cryptography-data-protection.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

@@ -91,7 +91,7 @@ Each check belongs to exactly one Part. When adding a new check, place it in the
 
 ## Code of Conduct
 
-This project follows the [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By participating, you agree to uphold this standard. Report issues via [GitHub Issues](https://github.com/chuxolab/laravel-fortress/issues).
+This project follows the [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By participating, you agree to uphold this standard. Report issues via [GitHub Issues](https://github.com/oilmonegov/laravel-fortress/issues).
 
 ## License
 

@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 1 — Application Security. 22 sections, 179
 # Fortress: Application Security
 
 > Part I of The Laravel Fortress — 22 sections · 179 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/01-application-security.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/01-application-security.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

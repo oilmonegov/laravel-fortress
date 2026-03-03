@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 6 — PHP Language & Type Safety. 15 section
 # Fortress: PHP Language & Type Safety
 
 > Part VI of The Laravel Fortress — 15 sections · 126 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/06-php-language-type-safety.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/06-php-language-type-safety.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

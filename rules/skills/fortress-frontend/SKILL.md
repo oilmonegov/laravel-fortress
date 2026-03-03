@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 10 — Frontend Engineering. 17 sections, 15
 # Fortress: Frontend Engineering
 
 > Part X of The Laravel Fortress — 17 sections · 153 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/10-frontend-engineering.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/10-frontend-engineering.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

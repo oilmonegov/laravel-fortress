@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 11 — Testing & Quality Assurance. 9 sectio
 # Fortress: Testing & Quality Assurance
 
 > Part XI of The Laravel Fortress — 9 sections · 76 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/11-testing-quality-assurance.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/11-testing-quality-assurance.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.

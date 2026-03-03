@@ -5,7 +5,7 @@ description: "Laravel Fortress Part 14 — Infrastructure & Operations. 16 secti
 # Fortress: Infrastructure & Operations
 
 > Part XIV of The Laravel Fortress — 16 sections · 208 checks
-> https://github.com/chuxolab/laravel-fortress/blob/main/parts/14-infrastructure-operations.md
+> https://github.com/oilmonegov/laravel-fortress/blob/main/parts/14-infrastructure-operations.md
 
 When writing or reviewing code, enforce these rules.
 Check `.fortress.yml` in the project root for overrides.
