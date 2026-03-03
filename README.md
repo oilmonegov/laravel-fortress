@@ -8,6 +8,10 @@
 
 Born from repeated production audits of a financial platform. Expanded into a universal standard for any Laravel project.
 
+<p align="center">
+  <img src="docs/fortress-architecture.svg" alt="Laravel Fortress Architecture — Defense in depth across Write, Commit, Push, and Merge stages" width="880">
+</p>
+
 ## Installation
 
 ```bash

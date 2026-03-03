@@ -1,0 +1,222 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 520" fill="none">
+  <defs>
+    <linearGradient id="headerGrad" x1="0" y1="0" x2="880" y2="0">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="aiGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="hookGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="ciGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="scanGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="#e11d48"/>
+    </linearGradient>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.1"/>
+    </filter>
+    <filter id="shadowSm" x="-2%" y="-4%" width="104%" height="112%">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="880" height="520" rx="12" fill="#0f172a"/>
+
+  <!-- Header -->
+  <rect x="24" y="20" width="832" height="56" rx="10" fill="url(#headerGrad)" filter="url(#shadow)"/>
+  <text x="440" y="42" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#c7d2fe" letter-spacing="2">THE LARAVEL FORTRESS</text>
+  <text x="440" y="62" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#e0e7ff" opacity="0.8">1,755 Checks · 200 Sections · 14 Parts · 10 Git Hooks · 4 Editors</text>
+
+  <!-- Flow arrow labels -->
+  <text x="440" y="100" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#94a3b8" letter-spacing="1">DEVELOPER WORKFLOW</text>
+
+  <!-- Stage 1: Write Code -->
+  <rect x="24" y="116" width="192" height="164" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" filter="url(#shadowSm)"/>
+  <rect x="24" y="116" width="192" height="32" rx="10" fill="#1e293b"/>
+  <rect x="24" y="116" width="192" height="32" rx="10" fill="url(#aiGrad)" opacity="0.15"/>
+  <circle cx="42" cy="132" r="4" fill="#3b82f6"/>
+  <text x="54" y="136" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#93c5fd">WRITE CODE</text>
+  <text x="200" y="136" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#3b82f6" font-weight="600">AI RULES</text>
+
+  <!-- AI Rules items -->
+  <text x="40" y="166" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">Claude Code</text>
+  <text x="178" y="166" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">14 skills</text>
+  <text x="40" y="184" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">Cursor</text>
+  <text x="178" y="184" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">.cursorrules</text>
+  <text x="40" y="202" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">Windsurf</text>
+  <text x="178" y="202" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">.windsurfrules</text>
+  <text x="40" y="220" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">Copilot</text>
+  <text x="178" y="220" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">instructions.md</text>
+
+  <text x="40" y="250" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">Detects PHP, Laravel, DB</text>
+  <text x="40" y="264" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">version at runtime</text>
+
+  <!-- Arrow 1→2 -->
+  <path d="M 224 198 L 248 198" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polygon points="248,194 256,198 248,202" fill="#475569"/>
+
+  <!-- Stage 2: Commit -->
+  <rect x="260" y="116" width="192" height="164" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" filter="url(#shadowSm)"/>
+  <rect x="260" y="116" width="192" height="32" rx="10" fill="#1e293b"/>
+  <rect x="260" y="116" width="192" height="32" rx="10" fill="url(#hookGrad)" opacity="0.15"/>
+  <circle cx="278" cy="132" r="4" fill="#f59e0b"/>
+  <text x="290" y="136" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#fcd34d">COMMIT</text>
+  <text x="436" y="136" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#f59e0b" font-weight="600">GIT HOOKS</text>
+
+  <!-- Hook items -->
+  <text x="276" y="166" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">pre-commit</text>
+  <text x="436" y="166" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">pint, debug, .env</text>
+  <text x="276" y="184" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">commit-msg</text>
+  <text x="436" y="184" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">conventional</text>
+  <text x="276" y="202" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">prepare-commit-msg</text>
+  <text x="436" y="202" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">co-author</text>
+  <text x="276" y="220" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">post-commit</text>
+  <text x="436" y="220" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">strict_types</text>
+
+  <text x="276" y="250" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">Blocks debug stmts, .env</text>
+  <text x="276" y="264" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">files, secrets, bad msgs</text>
+
+  <!-- Arrow 2→3 -->
+  <path d="M 460 198 L 484 198" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polygon points="484,194 492,198 484,202" fill="#475569"/>
+
+  <!-- Stage 3: Push / PR -->
+  <rect x="496" y="116" width="192" height="164" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" filter="url(#shadowSm)"/>
+  <rect x="496" y="116" width="192" height="32" rx="10" fill="#1e293b"/>
+  <rect x="496" y="116" width="192" height="32" rx="10" fill="url(#ciGrad)" opacity="0.15"/>
+  <circle cx="514" cy="132" r="4" fill="#10b981"/>
+  <text x="526" y="136" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#6ee7b7">PUSH &amp; PR</text>
+  <text x="672" y="136" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#10b981" font-weight="600">CI / HOOKS</text>
+
+  <!-- Push items -->
+  <text x="512" y="166" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">pre-push</text>
+  <text x="672" y="166" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">tests, phpstan</text>
+  <text x="512" y="184" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">pre-merge-commit</text>
+  <text x="672" y="184" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">AI blocker</text>
+  <text x="512" y="202" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">pr-protection.yml</text>
+  <text x="672" y="202" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">human review</text>
+  <text x="512" y="220" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">composer audit</text>
+  <text x="672" y="220" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="#64748b">vuln scan</text>
+
+  <text x="512" y="250" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">Runs full test suite,</text>
+  <text x="512" y="264" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">requires human approval</text>
+
+  <!-- Arrow 3→4 -->
+  <path d="M 696 198 L 720 198" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polygon points="720,194 728,198 720,202" fill="#475569"/>
+
+  <!-- Stage 4: Protected Branch -->
+  <rect x="732" y="116" width="124" height="164" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" filter="url(#shadowSm)"/>
+  <rect x="732" y="116" width="124" height="32" rx="10" fill="#1e293b"/>
+  <rect x="732" y="116" width="124" height="32" rx="10" fill="#6366f1" opacity="0.15"/>
+  <circle cx="750" cy="132" r="4" fill="#6366f1"/>
+  <text x="762" y="136" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#a5b4fc">PROTECTED</text>
+
+  <text x="794" y="172" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#a5b4fc" font-weight="600">main</text>
+  <text x="794" y="192" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#a5b4fc" font-weight="600">master</text>
+  <text x="794" y="212" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" fill="#a5b4fc" font-weight="600">production</text>
+
+  <!-- Shield icon -->
+  <path d="M 794 240 L 794 240 C 794 240 806 236 806 236 L 806 252 C 806 260 794 268 794 268 C 794 268 782 260 782 252 L 782 236 Z" fill="none" stroke="#6366f1" stroke-width="1.5"/>
+  <path d="M 789 252 L 793 256 L 800 248" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Bottom section: Compliance Scanner + Foundation -->
+  <rect x="24" y="300" width="400" height="84" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" filter="url(#shadowSm)"/>
+  <rect x="24" y="300" width="400" height="28" rx="10" fill="#1e293b"/>
+  <rect x="24" y="300" width="400" height="28" rx="10" fill="url(#scanGrad)" opacity="0.15"/>
+  <circle cx="42" cy="314" r="4" fill="#f43f5e"/>
+  <text x="54" y="318" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#fda4af">COMPLIANCE SCANNER</text>
+  <text x="408" y="318" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#f43f5e" font-weight="600">php artisan fortress:check</text>
+
+  <text x="40" y="348" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">strict_types</text>
+  <text x="152" y="348" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">debug stmts</text>
+  <text x="268" y="348" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">.env in git</text>
+  <text x="40" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">$fillable</text>
+  <text x="152" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">raw env()</text>
+  <text x="268" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#cbd5e1">unguarded</text>
+  <text x="368" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#10b981">--fix</text>
+
+  <!-- Configuration -->
+  <rect x="440" y="300" width="416" height="84" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" filter="url(#shadowSm)"/>
+  <rect x="440" y="300" width="416" height="28" rx="10" fill="#1e293b"/>
+  <rect x="440" y="300" width="416" height="28" rx="10" fill="#6366f1" opacity="0.1"/>
+  <circle cx="458" cy="314" r="4" fill="#818cf8"/>
+  <text x="470" y="318" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#c4b5fd">CONFIGURATION</text>
+  <text x="840" y="318" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#818cf8" font-weight="600">.fortress.yml</text>
+
+  <text x="456" y="348" font-family="ui-monospace, monospace" font-size="10" fill="#94a3b8">enforcement:</text>
+  <text x="556" y="348" font-family="ui-monospace, monospace" font-size="10" fill="#fbbf24">strict</text>
+  <text x="600" y="348" font-family="ui-monospace, monospace" font-size="10" fill="#94a3b8">|</text>
+  <text x="612" y="348" font-family="ui-monospace, monospace" font-size="10" fill="#60a5fa">standard</text>
+  <text x="688" y="348" font-family="ui-monospace, monospace" font-size="10" fill="#94a3b8">|</text>
+  <text x="700" y="348" font-family="ui-monospace, monospace" font-size="10" fill="#4ade80">relaxed</text>
+  <text x="456" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#94a3b8">severity:</text>
+  <text x="536" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#f87171">critical</text>
+  <text x="604" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#94a3b8">|</text>
+  <text x="616" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#fbbf24">warning</text>
+  <text x="676" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#94a3b8">|</text>
+  <text x="688" y="366" font-family="ui-monospace, monospace" font-size="10" fill="#60a5fa">info</text>
+
+  <!-- Foundation: 14 Parts -->
+  <rect x="24" y="400" width="832" height="100" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" filter="url(#shadowSm)"/>
+  <rect x="24" y="400" width="832" height="28" rx="10" fill="#1e293b"/>
+  <rect x="24" y="400" width="832" height="28" rx="10" fill="#6366f1" opacity="0.08"/>
+  <text x="440" y="418" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1">THE CHECKLIST — 14 PARTS</text>
+
+  <!-- Part pills row 1 -->
+  <rect x="38" y="436" width="106" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="91" y="451" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Security 179</text>
+
+  <rect x="152" y="436" width="100" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="202" y="451" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Crypto 109</text>
+
+  <rect x="260" y="436" width="84" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="302" y="451" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Auth 110</text>
+
+  <rect x="352" y="436" width="114" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="409" y="451" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Concurrency 84</text>
+
+  <rect x="474" y="436" width="108" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="528" y="451" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Financial 62</text>
+
+  <rect x="590" y="436" width="82" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="631" y="451" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">PHP 126</text>
+
+  <rect x="680" y="436" width="86" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="723" y="451" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Clean 128</text>
+
+  <rect x="774" y="436" width="72" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="810" y="451" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">FW 196</text>
+
+  <!-- Part pills row 2 -->
+  <rect x="38" y="464" width="72" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="74" y="479" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">DB 158</text>
+
+  <rect x="118" y="464" width="106" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="171" y="479" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Frontend 153</text>
+
+  <rect x="232" y="464" width="96" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="280" y="479" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Testing 76</text>
+
+  <rect x="336" y="464" width="82" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="377" y="479" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">APIs 136</text>
+
+  <rect x="426" y="464" width="96" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="474" y="479" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Logging 30</text>
+
+  <rect x="530" y="464" width="86" height="22" rx="6" fill="#1e3a5f" opacity="0.6"/>
+  <text x="573" y="479" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" fill="#93c5fd">Infra 208</text>
+
+  <!-- Total badge -->
+  <rect x="680" y="464" width="166" height="22" rx="6" fill="#6366f1" opacity="0.2" stroke="#6366f1" stroke-width="0.5" stroke-opacity="0.4"/>
+  <text x="763" y="479" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#a5b4fc">1,755 total checks</text>
+</svg>
