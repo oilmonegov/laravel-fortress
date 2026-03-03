@@ -8,7 +8,7 @@
 # Documentation: https://github.com/oilmonegov/laravel-fortress/blob/main/rules/README.md
 
 fortress:
-  version: "1.0.0"
+  version: "1.1.0"
 
   # Stack override (auto-detected from composer.json / package.json if omitted)
   # Uncomment and set only if auto-detection gives wrong results.

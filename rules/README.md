@@ -78,7 +78,7 @@ Create a `.fortress.yml` in your project root to configure which rules are activ
 
 ```yaml
 fortress:
-  version: "1.0.0"
+  version: "1.1.0"
 
   parts:
     P01_application_security:
